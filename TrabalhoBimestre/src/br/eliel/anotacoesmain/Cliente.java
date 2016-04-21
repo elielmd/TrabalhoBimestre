@@ -6,16 +6,16 @@ import br.eliel.anotacoes.Tabela;
 @Tabela("CAD_USUARIO")
 public class Cliente {
 
-	@Coluna(pk=true)
+	@Coluna(pk=true, nome="UsID", tamanho=-1)
 	private int id;
 
-	@Coluna(nome="USNOME")
+	@Coluna(nome="UsNome", tamanho=70)
 	private String nome;
 	
-	@Coluna(endereco="USENDERECO")
+	@Coluna(endereco="UsEnderecos", tamanho=100)
 	private String endereco;
 	
-	@Coluna(telefone="USTELEFONE")
+	@Coluna(telefone="UsTelefone", tamanho=20)
 	private String telefone;
 
 	public Cliente() {
