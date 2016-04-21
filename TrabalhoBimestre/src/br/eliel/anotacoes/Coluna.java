@@ -10,6 +10,10 @@ import java.lang.annotation.Target;
 public @interface Coluna {
 
 	String nome() default "";
+	
+	String endereco() default "";
+	
+	String telefone() default "";
 
 	boolean pk() default false;
 
