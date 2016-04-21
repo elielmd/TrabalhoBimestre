@@ -5,21 +5,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class MetodosSqlGen {
+public abstract class MetodosSqlGen {
 
 		public ExecuteMetodos() {
+		}
 
+		protected abstract String getCreateTable(Connection con, Object obj) {	
+		}
 		
+		protected abstract String getDropTable(Connection con, Object obj) {
 		}
 
-		private String getCreateTable(Class<Cliente> cl) {
-
-			
+		protected abstract PreparedStatement getSqlInset(Connection con, Object obj) {	
 		}
-
-		private PreparedStatement getPreparedStatementForInset(Connection con, Object obj) {
-
-			
+		
+		protected abstract PreparedStatement getSelectAll(Connection con, Object obj) {
 		}
 
 		public static void main(String[] args) {
