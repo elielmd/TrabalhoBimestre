@@ -14,136 +14,124 @@ import br.eliel.enums.*;
 
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
-	
+
 	public ExecuteSqlGen() {
-		
+
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 		String strCreateTable = getCreateTable(cliente);
 		System.out.println(strCreateTable);
-		
-		try {
-			abrirConexao();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//fecharConexao();
+
+		/*
+		 * try { abrirConexao(); } catch (SQLException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } //fecharConexao();
+		 */
 	}
-		
+
 	private void abrirConexao() throws SQLException {
 		String url = "jdbc:h2:D:/banco/banco";
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
-		System.err.println("a");
-		
 	}
 
 	private void fecharConexao() throws SQLException {
 		con.close();
 	}
 
-	protected String getCreateTable(/*Connection con,*/ Object obj) {
+	protected String getCreateTable(/* Connection con, */ Object obj) {
 		try {
 			String nameTable;
 			Class<?> cl = obj.getClass();
 
 			StringBuilder sb = new StringBuilder();
-
+			// Declaração da tabela.
+			String nomeTabela;
 			if (cl.isAnnotationPresent(Tabela.class)) {
-				Tabela annotationTable = cl.getAnnotation(Tabela.class);
-				nameTable = annotationTable.value();
+
+				Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+				nomeTabela = anotacaoTabela.value();
+
 			} else {
-				nameTable = cl.getSimpleName().toUpperCase();
+				nomeTabela = cl.getSimpleName().toUpperCase();
+
 			}
-			
-			/*System.out.println(nameTable);*/
+			sb.append("CREATE TABLE ").append(nomeTabela).append(" (");
 
-			sb.append("CREATE TABLE ").append(nameTable).append(" (");
+			Field[] atributos = cl.getDeclaredFields();
 
-			Field[] attributes = cl.getDeclaredFields();
+			// Declaração das colunas
 
-			for (int i = 0; i < attributes.length; i++) {
-				Field field = attributes[i];
+			for (int i = 0; i < atributos.length; i++) {
 
-				String nameColumn;
-				String typeColumn = null;
+				Field field = atributos[i];
+
+				String nomeColuna;
+				String tipoColuna = null;
 
 				if (field.isAnnotationPresent(Coluna.class)) {
-					Coluna annotationColumn = field.getAnnotation(Coluna.class);
+					Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
 
-					if (annotationColumn.nome().isEmpty()) {
-						nameColumn = field.getName().toUpperCase();
+					if (anotacaoColuna.nome().isEmpty()) {
+						nomeColuna = field.getName().toUpperCase();
 					} else {
-						nameColumn = annotationColumn.nome();
+						nomeColuna = anotacaoColuna.nome();
 					}
+
 				} else {
-					nameColumn = field.getName().toUpperCase();
+					nomeColuna = field.getName().toUpperCase();
 				}
 
-				Class<?> typeParemetros = field.getType();
+				Class<?> tipoParametro = field.getType();
 
-				if (typeParemetros.equals(String.class)) {
-					if (field.getAnnotation(Coluna.class).tamanho() > -1) {
-						typeColumn = "VARCHAR(" + field.getAnnotation(Coluna.class).tamanho() + ")";
-					} else {
-						typeColumn = "VARCHAR(100)";
-					}
-				} else if (typeParemetros.equals(int.class)) {
+				if (tipoParametro.equals(String.class)) {
+					tipoColuna = "VARCHAR(100)";
+
+				} else if (tipoParametro.equals(int.class)) {
+					tipoColuna = "INT";
+
+				} else if (tipoParametro.equals(int.class)) {
 					if (field.getAnnotation(Coluna.class).pk() == true) {
-						typeColumn = "INT NOT NULL";
+						tipoColuna = "INT NOT NULL";
 					} else {
-						typeColumn = "INT";
+						tipoColuna = "INT";
 					}
-				} else if (typeParemetros.isEnum()) {
-					typeColumn = "INT";
+				} else if (tipoParametro.isEnum()) {
+					tipoColuna = "INT";
 				}
 
 				if (i > 0)
 					sb.append(",");
 
-				sb.append("\n\t").append(nameColumn).append(" ").append(typeColumn);
-
-				/*System.out.println(nameColumn + " " + typeColumn);*/
+				sb.append("\n\t").append(nomeColuna).append(" ").append(tipoColuna);
 			}
 
-			sb.append(",\n\tPRIMARY KEY(");
-			for (int y = 0; y < attributes.length; y++) {
-				int get = 0;
-				Field fields = attributes[y];
-
+			sb.append(",\n\tPRIMARY KEY( ");
+			for (int x = 0, achou = 0; x < atributos.length; x++) {
+				Field fields = atributos[x];
 				if (fields.isAnnotationPresent(Coluna.class)) {
-					Coluna annotationColumn = fields.getAnnotation(Coluna.class);
-
-					if (annotationColumn.pk()) {
-						if (get > 0)
+					Coluna anotacaoColuna = fields.getAnnotation(Coluna.class);
+					if (anotacaoColuna.pk()) {
+						if (achou > 0) {
 							sb.append(", ");
-
-						if (annotationColumn.nome().isEmpty()) {
+						}
+						if (anotacaoColuna.nome().isEmpty()) {
 							sb.append(fields.getName().toUpperCase());
 						} else {
-							sb.append(annotationColumn.nome());
+							sb.append(anotacaoColuna.nome());
 						}
-						get++;
+						achou++;
 					}
 				}
-				if (y == attributes.length - 1) {
+				if (x == atributos.length - 1) {
 					sb.append(")");
-				}
+				}	
 			}
 			sb.append("\n);");
 
-			String create = sb.toString();
-			Statement execute = con.createStatement();
-			execute.executeUpdate(create);
-
-			return create;
+			return sb.toString();
 
 		} catch (SecurityException e) {
 			throw new RuntimeException(e);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
 		}
 	}
 
