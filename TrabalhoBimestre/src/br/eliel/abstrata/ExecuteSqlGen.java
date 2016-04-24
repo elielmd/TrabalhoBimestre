@@ -1,16 +1,17 @@
 package br.eliel.abstrata;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.lang.reflect.Method;
 
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
 import br.eliel.anotacoesmain.Cliente;
-import br.eliel.enums.*;
+import br.eliel.enums.EstadoCivil;
 
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
@@ -22,13 +23,15 @@ public class ExecuteSqlGen extends SqlGen {
 		System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
+		PreparedStatement strGetSqlInsert = getSqlInsert(con, cliente);
+		System.out.println(strGetSqlInsert);
 
 		try {
 			abrirConexao();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	private void abrirConexao() throws SQLException {
@@ -42,7 +45,7 @@ public class ExecuteSqlGen extends SqlGen {
 		con.close();
 	}
 
-	protected String getCreateTable(Connection con,  Object obj) {
+	protected String getCreateTable(Connection con, Object obj) {
 		try {
 			String nameTable;
 			Class<?> cl = obj.getClass();
@@ -155,8 +158,9 @@ public class ExecuteSqlGen extends SqlGen {
 
 			sb.append("DROP TABLE ").append(nomeTabela).append(";");
 
-			 //Statement exeT = con.createStatement(); exeT.executeUpdate(sb.toString());
-		
+			// Statement exeT = con.createStatement();
+			// exeT.executeUpdate(sb.toString());
+
 			return sb.toString();
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -167,23 +171,79 @@ public class ExecuteSqlGen extends SqlGen {
 	@Override
 	protected PreparedStatement getSqlInsert(Connection con, Object obj) {
 		Class<?> cl = obj.getClass();
-        StringBuilder sb = new StringBuilder();
-        String nomeTabela;
+		StringBuilder sb = new StringBuilder();
+		String nomeTabela;
 
-        if (cl.isAnnotationPresent(Tabela.class)) {
-            Tabela table = cl.getAnnotation(Tabela.class);
-            nomeTabela = table.value();
-        } else {
-            nomeTabela = cl.getSimpleName().toUpperCase();
-        }
+		if (cl.isAnnotationPresent(Tabela.class)) {
+			Tabela table = cl.getAnnotation(Tabela.class);
+			nomeTabela = table.value();
+		} else {
+			nomeTabela = cl.getSimpleName().toUpperCase();
+		}
 
-        sb.append("INSERT INTO ").append(nomeTabela).append(" (");
+		sb.append("INSERT INTO ").append(nomeTabela).append(" (");
 
-        Field[] attributes = cl.getDeclaredFields();
+		Field[] atributos = cl.getDeclaredFields();
 
-        for (int i = 0; i < attributes.length; i++) {
-            Field field = attributes[i];
-            String nomeColuna;
+		for (int i = 0; i < atributos.length; i++) {
+			Field field = atributos[i];
+			String nomeColuna;
+			if (field.isAnnotationPresent(Coluna.class)) {
+				Coluna column = field.getAnnotation(Coluna.class);
+				if (column.nome().isEmpty()) {
+					nomeColuna = field.getName().toUpperCase();
+				} else {
+					nomeColuna = column.nome();
+				}
+			} else {
+				nomeColuna = field.getName().toUpperCase();
+			}
+			if (i > 0) {
+				sb.append(", ");
+			}
+			sb.append(nomeColuna);
+		}
+		sb.append(") VALUES (");
+		for (int i = 0; i < atributos.length; i++) {
+			if (i > 0)
+				sb.append(", ");
+
+			sb.append("?");
+		}
+		sb.append(")");
+		String insert = sb.toString();
+		System.out.println(insert);
+
+		PreparedStatement ps = null;
+
+		try {
+			ps = con.prepareStatement(insert);
+			for (int i = 0; i < atributos.length; i++) {
+				Field field = atributos[i];
+				Object type = field.getType();
+				field.setAccessible(true);
+				if (type.equals(int.class)) {
+					ps.setInt(i + 1, field.getInt(obj));
+				} else if (type.equals(String.class)) {
+					ps.setString(i + 1, String.valueOf(field.get(obj)));
+				} else if (field.getType().isEnum()) {
+					Object value = field.get(obj);
+					Method metodo = value.getClass().getMethod("ordinal");
+					ps.setInt(i + 1, (Integer) metodo.invoke(value, null));
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+		return ps;
 
 	}
 
