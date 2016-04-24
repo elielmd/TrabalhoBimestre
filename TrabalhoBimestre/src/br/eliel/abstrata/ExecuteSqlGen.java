@@ -20,10 +20,9 @@ public class ExecuteSqlGen extends SqlGen {
 
 		abrirConexao();
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
-	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){}	
-	    
-		/*String strCreateTable = getCreateTable(con, cliente);
-		System.out.println(strCreateTable);
+	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){ps.executeQuery();}	
+	    /*try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};*/
+		/*System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
 		PreparedStatement strGetSqlInsert = getSqlInsert(con, cliente);
