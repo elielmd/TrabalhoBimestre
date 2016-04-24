@@ -2,24 +2,25 @@ package br.eliel.anotacoesmain;
 
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
+import br.eliel.enums.EstadoCivil;
 
 @Tabela("CAD_USUARIO")
 public class Cliente {
 
-	@Coluna(pk=true, nome="UsID", tamanho=-1)
+	@Coluna(pk=true, nome="UsID", tamanho = -1)
 	private int id;
 
 	@Coluna(nome="UsNome", tamanho = 100)
 	private String nome;
 	
-	@Coluna(endereco="UsEnderecos", tamanho = 255)
+	@Coluna(nome="UsEnderecos", tamanho = 255)
 	private String endereco;
 	
-	@Coluna(telefone="UsTelefone", tamanho= 20)
+	@Coluna(nome="UsTelefone", tamanho = 20)
 	private String telefone;
 	
-	@Coluna(estadoCivil="UsEstadoCivil", tamanho= 100)
-	private String estadoCivil;
+	@Coluna(nome="UsEstadoCivil", tamanho = 100)
+	private EstadoCivil estadoCivil;
 
 	public int getId() {
 		return id;
@@ -53,19 +54,15 @@ public class Cliente {
 		this.telefone = telefone;
 	}
 	
-	public String getEstadoCivil() {
+	public EstadoCivil getEstadoCivil() {
 		return estadoCivil;
-	}
-
-	public void setEstadoCivil(String estadoCivil) {
-		this.estadoCivil = estadoCivil;
 	}
 
 	public Cliente() {
 		this(0, null, null, null, null);
 	}
 
-	public Cliente(int id, String nome, String endereco, String telefone, String estadoCivil) {
+	public Cliente(int id, String nome, String endereco, String telefone, EstadoCivil estadoCivil) {
 		super();
 		this.id = id;
 		this.nome = nome;

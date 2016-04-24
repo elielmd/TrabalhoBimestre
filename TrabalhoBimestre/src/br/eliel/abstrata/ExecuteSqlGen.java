@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
 import br.eliel.anotacoesmain.Cliente;
@@ -16,13 +15,19 @@ import br.eliel.enums.*;
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
 	
-	public ExecuteSqlGen() throws SQLException {
+	public ExecuteSqlGen() {
 		
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 		String strCreateTable = getCreateTable(cliente);
+		System.out.println(strCreateTable);
 		
-		/*abrirConexao();
-		fecharConexao();*/
+		try {
+			abrirConexao();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//fecharConexao();
 	}
 		
 	private void abrirConexao() throws SQLException {
@@ -38,7 +43,7 @@ public class ExecuteSqlGen extends SqlGen {
 		con.close();
 	}
 
-	protected String getCreateTable(Connection con, Object obj) {
+	protected String getCreateTable(/*Connection con,*/ Object obj) {
 		try {
 			String nameTable;
 			Class<?> cl = obj.getClass();
@@ -51,7 +56,8 @@ public class ExecuteSqlGen extends SqlGen {
 			} else {
 				nameTable = cl.getSimpleName().toUpperCase();
 			}
-			System.out.println(nameTable);
+			
+			/*System.out.println(nameTable);*/
 
 			sb.append("CREATE TABLE ").append(nameTable).append(" (");
 
@@ -98,6 +104,7 @@ public class ExecuteSqlGen extends SqlGen {
 
 				sb.append("\n\t").append(nameColumn).append(" ").append(typeColumn);
 
+				/*System.out.println(nameColumn + " " + typeColumn);*/
 			}
 
 			sb.append(",\n\tPRIMARY KEY(");
@@ -177,10 +184,6 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	public static void main(String[] args) {
-		try {
-				new ExecuteSqlGen();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		new ExecuteSqlGen();
 	}
 }
