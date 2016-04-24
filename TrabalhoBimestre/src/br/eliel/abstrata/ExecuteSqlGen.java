@@ -16,17 +16,20 @@ import br.eliel.enums.EstadoCivil;
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
 
-	public ExecuteSqlGen() {
+	public ExecuteSqlGen() throws SQLException {
 
+		abrirConexao();
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
-		String strCreateTable = getCreateTable(con, cliente);
+	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){}	
+	    
+		/*String strCreateTable = getCreateTable(con, cliente);
 		System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
 		PreparedStatement strGetSqlInsert = getSqlInsert(con, cliente);
 		System.out.println(strGetSqlInsert);
 		PreparedStatement strGetSqlSelectAll = getSqlSelectAll(con, cliente);
-		System.out.println(strGetSqlSelectAll);
+		System.out.println(strGetSqlSelectAll);*/
 
 		try {
 			abrirConexao();
@@ -37,7 +40,7 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	private void abrirConexao() throws SQLException {
-		String url = "jdbc:h2:D:/banco/banco";
+		String url = "jdbc:h2:D:/banco/bancoNovo";
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
@@ -136,7 +139,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("\n);");
-
+			System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
@@ -274,7 +277,12 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	public static void main(String[] args) {
-		new ExecuteSqlGen();
+		try {
+			new ExecuteSqlGen();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
