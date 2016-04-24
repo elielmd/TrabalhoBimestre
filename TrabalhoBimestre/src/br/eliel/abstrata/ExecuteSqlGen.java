@@ -211,13 +211,13 @@ public class ExecuteSqlGen extends SqlGen {
 			sb.append("?");
 		}
 		sb.append(")");
-		String insert = sb.toString();
-		System.out.println(insert);
+		String add = sb.toString();
+		System.out.println(add);
 
 		PreparedStatement ps = null;
 
 		try {
-			ps = con.prepareStatement(insert);
+			ps = con.prepareStatement(add);
 			for (int i = 0; i < atributos.length; i++) {
 				Field field = atributos[i];
 				Object type = field.getType();
