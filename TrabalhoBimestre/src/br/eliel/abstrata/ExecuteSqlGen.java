@@ -6,9 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import br.eliel.anotacoes.*;
-import br.eliel.anotacoesmain.*;
+import br.eliel.anotacoes.Coluna;
+import br.eliel.anotacoes.Tabela;
 
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
@@ -18,12 +17,13 @@ public class ExecuteSqlGen extends SqlGen {
 		fecharConexao();
 	}
 		
-
 	private void abrirConexao() throws SQLException {
-		String url = "jdbc:h2:D:~/banco";
+		String url = "jdbc:h2:D:/banco/banco";
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
+		System.err.println("a");
+		
 	}
 
 	private void fecharConexao() throws SQLException {
@@ -168,9 +168,11 @@ public class ExecuteSqlGen extends SqlGen {
 		return null;
 	}
 
-	public static void main(String[] args)throws SQLException {
-
-		new ExecuteSqlGen();
-
+	public static void main(String[] args) {
+		try {
+				new ExecuteSqlGen();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 	}
 }
