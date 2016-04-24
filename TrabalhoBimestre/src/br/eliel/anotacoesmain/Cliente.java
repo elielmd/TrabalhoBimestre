@@ -17,6 +17,9 @@ public class Cliente {
 	
 	@Coluna(telefone="UsTelefone", tamanho= 20)
 	private String telefone;
+	
+	@Coluna(estadoCivil="UsEstadoCivil", tamanho= 100)
+	private String estadoCivil;
 
 	public int getId() {
 		return id;
@@ -49,16 +52,25 @@ public class Cliente {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-
-	public Cliente() {
-		this(0, null);
+	
+	public String getEstadoCivil() {
+		return estadoCivil;
 	}
 
-	public Cliente(int id, String nome) {
+	public void setEstadoCivil(String estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
+	public Cliente() {
+		this(0, null, null, null, null);
+	}
+
+	public Cliente(int id, String nome, String endereco, String telefone, String estadoCivil) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.endereco = endereco;
 		this.telefone = telefone;
+		this.estadoCivil = estadoCivil;
 	}
 }

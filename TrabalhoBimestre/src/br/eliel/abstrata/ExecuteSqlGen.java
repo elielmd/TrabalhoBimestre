@@ -6,15 +6,23 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
+import br.eliel.anotacoesmain.Cliente;
+import br.eliel.enums.*;
 
 public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
 	
-	public ExecuteSqlGen() throws SQLException {		
-		abrirConexao();
-		fecharConexao();
+	public ExecuteSqlGen() throws SQLException {
+		
+		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
+		String strCreateTable = getCreateTable(cliente);
+		
+		/*abrirConexao();
+		fecharConexao();*/
 	}
 		
 	private void abrirConexao() throws SQLException {

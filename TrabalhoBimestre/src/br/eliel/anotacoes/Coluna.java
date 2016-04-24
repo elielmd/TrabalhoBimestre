@@ -19,4 +19,6 @@ public @interface Coluna {
 
 	int tamanho();
 
+	String estadoCivil() default "";
+
 }
