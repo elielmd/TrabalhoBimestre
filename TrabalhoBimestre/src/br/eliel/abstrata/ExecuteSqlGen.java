@@ -23,8 +23,13 @@ public class ExecuteSqlGen extends SqlGen {
 		System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
+		System.out.println("BATATA1");
 		PreparedStatement strGetSqlInsert = getSqlInsert(con, cliente);
+		System.out.println("BATATA2");
 		System.out.println(strGetSqlInsert);
+		System.out.println("BATATA3");
+		PreparedStatement strGetSqlSelectAll = getSqlSelectAll(con, cliente);
+		System.out.println(strGetSqlSelectAll);
 
 		try {
 			abrirConexao();
@@ -173,18 +178,18 @@ public class ExecuteSqlGen extends SqlGen {
 		Class<?> cl = obj.getClass();
 		StringBuilder sb = new StringBuilder();
 		String nomeTabela;
-
+		System.out.println("TESTE1");
 		if (cl.isAnnotationPresent(Tabela.class)) {
 			Tabela table = cl.getAnnotation(Tabela.class);
 			nomeTabela = table.value();
 		} else {
 			nomeTabela = cl.getSimpleName().toUpperCase();
 		}
-
+		System.out.println("TESTE2");
 		sb.append("INSERT INTO ").append(nomeTabela).append(" (");
 
 		Field[] atributos = cl.getDeclaredFields();
-
+		System.out.println("TESTE3");
 		for (int i = 0; i < atributos.length; i++) {
 			Field field = atributos[i];
 			String nomeColuna;
@@ -203,6 +208,7 @@ public class ExecuteSqlGen extends SqlGen {
 			}
 			sb.append(nomeColuna);
 		}
+		System.out.println("TESTE4");
 		sb.append(") VALUES (");
 		for (int i = 0; i < atributos.length; i++) {
 			if (i > 0)
@@ -210,18 +216,22 @@ public class ExecuteSqlGen extends SqlGen {
 
 			sb.append("?");
 		}
+		System.out.println("TESTE5");
 		sb.append(")");
 		String add = sb.toString();
-		System.out.println(add);
-
+		//System.out.println(add);
+		
 		PreparedStatement ps = null;
+		System.out.println(ps);
 
 		try {
 			ps = con.prepareStatement(add);
+			System.out.println(ps);
 			for (int i = 0; i < atributos.length; i++) {
 				Field field = atributos[i];
 				Object type = field.getType();
 				field.setAccessible(true);
+				
 				if (type.equals(int.class)) {
 					ps.setInt(i + 1, field.getInt(obj));
 				} else if (type.equals(String.class)) {
@@ -232,7 +242,6 @@ public class ExecuteSqlGen extends SqlGen {
 					ps.setInt(i + 1, (Integer) metodo.invoke(value, null));
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -249,9 +258,29 @@ public class ExecuteSqlGen extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlSelectAll(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		System.out.println("TESTE1");
+		Class<?> cl = obj.getClass();
+        StringBuilder sb = new StringBuilder();
+        String nomeTabela;
+        System.out.println("TESTE2");
+        if (cl.isAnnotationPresent(Tabela.class)) {
+            nomeTabela = cl.getAnnotation(Tabela.class).value();
+        } else {
+            nomeTabela = cl.getSimpleName().toUpperCase();
+        }
+        sb.append("SELECT * FROM ").append(nomeTabela).append(";");
+
+        String selectFrom = sb.toString();
+        System.out.println(selectFrom);
+        PreparedStatement ps = null;
+
+        try {
+            ps = con.prepareStatement(selectFrom);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ps;
+    }
 
 	@Override
 	protected PreparedStatement getSqlSelectById(Connection con, Object obj) {
