@@ -9,13 +9,13 @@ public class Cliente {
 	@Coluna(pk=true, nome="UsID", tamanho=-1)
 	private int id;
 
-	@Coluna(nome="UsNome", tamanho=70)
+	@Coluna(nome="UsNome", tamanho = 100)
 	private String nome;
 	
-	@Coluna(endereco="UsEnderecos", tamanho=100)
+	@Coluna(endereco="UsEnderecos", tamanho = 255)
 	private String endereco;
 	
-	@Coluna(telefone="UsTelefone", tamanho=20)
+	@Coluna(telefone="UsTelefone", tamanho= 20)
 	private String telefone;
 
 	public int getId() {
