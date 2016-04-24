@@ -20,6 +20,8 @@ public class ExecuteSqlGen extends SqlGen {
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 		String strCreateTable = getCreateTable(cliente);
 		System.out.println(strCreateTable);
+		String strDropTable = getDropTable(cliente);
+		System.out.println(strDropTable);
 
 		/*
 		 * try { abrirConexao(); } catch (SQLException e) { // TODO
@@ -135,10 +137,29 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 	}
 
-	@Override
-	protected String getDropTable(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+	protected String getDropTable(/*Connection con,*/ Object obj) {
+		 try {
+	            String nomeTabela;
+	            StringBuilder sb = new StringBuilder();
+
+	            Class<?> cl = obj.getClass();
+
+	            if (cl.isAnnotationPresent(Tabela.class)) {
+	                Tabela t = cl.getAnnotation(Tabela.class);
+	                nomeTabela = t.value();
+	            } else {
+	                nomeTabela = cl.getSimpleName().toUpperCase();
+	            }
+
+	            sb.append("DROP TABLE ").append(nomeTabela).append(";");
+
+	           /*Statement exeT = con.createStatement();
+	           exeT.executeUpdate(drop);*/
+	            return sb.toString();
+	        } catch (SecurityException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
 	}
 
 	@Override
@@ -174,4 +195,5 @@ public class ExecuteSqlGen extends SqlGen {
 	public static void main(String[] args) {
 		new ExecuteSqlGen();
 	}
+
 }
