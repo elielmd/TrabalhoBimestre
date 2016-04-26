@@ -14,15 +14,15 @@ import br.eliel.anotacoes.Tabela;
 import br.eliel.enums.EstadoCivil;
 
 public class ExecuteSqlGen extends SqlGen {
-	private Connection con;
+	/*private Connection con;
 
 	public ExecuteSqlGen() throws SQLException {
 
 		abrirConexao();
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 	    //try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){ps.executeUpdate();}	
-	    /*try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};*/
-		/*System.out.println(strCreateTable);
+	    try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};
+		System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
 		/*PreparedStatement t = getSqlInsert(con, cliente); 
@@ -32,16 +32,16 @@ public class ExecuteSqlGen extends SqlGen {
 		t.setString(4, cliente.getTelefone());
 		t.setInt(5, cliente.getEstadoCivil().ordinal());
 		t.executeUpdate();
-		System.out.println(t);*/
+		System.out.println(t);
 		
-		/*PreparedStatement t1 = getSqlSelectAll(con, cliente);
+		PreparedStatement t1 = getSqlSelectAll(con, cliente);
 		t1.executeQuery();
-		System.out.println(t1);*/
+		System.out.println(t1);
 	    
-		/*PreparedStatement t2 = getSqlSelectById(con, cliente);
+		PreparedStatement t2 = getSqlSelectById(con, cliente);
 		t2.setInt(1, 5);
 		t2.executeQuery();
-		System.out.println(t2);*/
+		System.out.println(t2);
 		
 		PreparedStatement t3 = getSqlUpdateById(con, cliente);
 		t3.setInt(1, 5);
@@ -52,10 +52,10 @@ public class ExecuteSqlGen extends SqlGen {
 		t3.executeUpdate();
 		System.out.println(t3);
 		
-		/*PreparedStatement t4 = getSqlDeleteById(con, cliente);
+		PreparedStatement t4 = getSqlDeleteById(con, cliente);
 		t4.setInt(1, 5);
 		t4.executeUpdate();
-		System.out.println(t4);*/
+		System.out.println(t4);
 		
 		try {
 			abrirConexao();
@@ -63,7 +63,7 @@ public class ExecuteSqlGen extends SqlGen {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}  
 
 	private void abrirConexao() throws SQLException {
 		String url = "jdbc:h2:D:/banco/trabalhosql";
@@ -74,7 +74,7 @@ public class ExecuteSqlGen extends SqlGen {
 
 	private void fecharConexao() throws SQLException {
 		con.close();
-	}
+	} */
 
 	protected String getCreateTable(Connection con, Object obj) {
 		try {
@@ -423,12 +423,7 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	public static void main(String[] args) {
-		try {
-			new ExecuteSqlGen();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		new ExecuteSqlGen();
 	}
 
 }
