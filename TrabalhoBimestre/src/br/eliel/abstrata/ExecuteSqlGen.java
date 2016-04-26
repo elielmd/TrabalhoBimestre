@@ -315,8 +315,23 @@ public class ExecuteSqlGen extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlUpdateById(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		Class<? extends Object> cl = obj.getClass();
+		StringBuilder sb = new StringBuilder();
+		PreparedStatement ps = null;
+		String nomeTabela;
+		if (cl.isAnnotationPresent(Tabela.class)) {
+			Tabela anTabela = cl.getAnnotation(Tabela.class);
+			nomeTabela = anTabela.value();
+		} else {
+			nomeTabela = cl.getSimpleName().toUpperCase();
+		}
+		sb.append("UPDATE ").append(nomeTabela).append(" SET \n");
+
+		Field[] atributos = cl.getDeclaredFields();
+		String pk = "";
+
+		
+		return ps;
 	}
 
 	@Override
