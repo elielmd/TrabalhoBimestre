@@ -43,14 +43,14 @@ public class ExecuteSqlGen extends SqlGen {
 		t2.executeQuery();
 		System.out.println(t2);*/
 		
-		PreparedStatement t3 = getSqlUpdateById(con, cliente);
+		/*PreparedStatement t3 = getSqlUpdateById(con, cliente);
 		t3.setInt(1, 5);
 		t3.setString(2, cliente.getNome()); 
 		t3.setString(3, cliente.getEndereco()); 
 		t3.setString(4, cliente.getTelefone());
 		t3.setInt(5, cliente.getEstadoCivil().ordinal());
 		t3.executeUpdate();
-		System.out.println(t3);
+		System.out.println(t3);*/
 		
 		try {
 			abrirConexao();
@@ -377,8 +377,31 @@ public class ExecuteSqlGen extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlDeleteById(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		try{
+			StringBuilder sb = new StringBuilder();
+			String nomeTabela;
+			if (obj.getClass().isAnnotationPresent(Tabela.class)) {
+				Tabela anTabela = obj.getClass().getAnnotation(Tabela.class);
+				nomeTabela = anTabela.value();
+			} else {
+				nomeTabela = obj.getClass().getSimpleName().toUpperCase();
+			}
+			
+			Field[] atributos = obj.getClass().getDeclaredFields();			
+			String pk = "";
+			
+			
+			try {				
+				ps =  con.prepareStatement(sb.toString());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
+		}catch(SecurityException e){
+			throw new RuntimeException(e);
+		}			
+		return ps;	
 	}
 
 	public static void main(String[] args) {
