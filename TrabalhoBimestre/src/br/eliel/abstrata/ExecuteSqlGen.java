@@ -20,7 +20,7 @@ public class ExecuteSqlGen extends SqlGen {
 
 		abrirConexao();
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
-	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){ps.executeUpdate();}	
+	    //try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){ps.executeUpdate();}	
 	    /*try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};*/
 		/*System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
@@ -34,9 +34,14 @@ public class ExecuteSqlGen extends SqlGen {
 		t.executeUpdate();
 		System.out.println(t);*/
 		
-		PreparedStatement t1 = getSqlSelectAll(con, cliente);
+		/*PreparedStatement t1 = getSqlSelectAll(con, cliente);
 		t1.executeQuery();
-		System.out.println(t1);
+		System.out.println(t1);*/
+	    
+		PreparedStatement t2 = getSqlSelectById(con, cliente);
+		t2.setInt(1, 5);
+		t2.executeQuery();
+		System.out.println(t2);
 
 		try {
 			abrirConexao();
@@ -270,7 +275,6 @@ public class ExecuteSqlGen extends SqlGen {
 		PreparedStatement ps = null;
 		try{
 			StringBuilder sb = new StringBuilder();
-			// Declaração da tabela.
 			String nomeTabela;
 			if (obj.getClass().isAnnotationPresent(Tabela.class)) {
 				Tabela anTabela = obj.getClass().getAnnotation(Tabela.class);
@@ -278,10 +282,32 @@ public class ExecuteSqlGen extends SqlGen {
 			} else {
 				nomeTabela = obj.getClass().getSimpleName().toUpperCase();
 			}			
-			
 			Field[] atributos = obj.getClass().getDeclaredFields();			
 			String pk = "";
-			
+			for (int i = 0; i < atributos.length; i++) {
+
+				Field field = atributos[i];
+
+				if (field.isAnnotationPresent(Coluna.class)) {
+					Coluna anColuna = field.getAnnotation(Coluna.class);
+					
+					if(anColuna.pk()){
+						if (pk.equalsIgnoreCase("")){
+							pk = anColuna.nome();
+						}else{
+							pk = pk + ", " + anColuna.nome();
+						}							
+					}
+				}
+			}
+			sb.append("SELECT * FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?");
+			try {				
+				ps =  con.prepareStatement(sb.toString());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+			return ps;	
 		}catch(SecurityException e){
 			throw new RuntimeException(e);
 		}	
