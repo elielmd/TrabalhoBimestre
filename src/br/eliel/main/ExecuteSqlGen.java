@@ -1,29 +1,33 @@
 package br.eliel.main;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.lang.reflect.Method;
-
 import br.eliel.abstrata.SqlGen;
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
 import br.eliel.enums.EstadoCivil;
 
 public class ExecuteSqlGen extends SqlGen {
-	/*private Connection con;
+	
+	private Connection con = null;
+	
+	public Connection getCon() {
+		return con;
+	}
+
+	public void setCon(Connection con) {
+		this.con = con;
+	}
 
 	public ExecuteSqlGen() throws SQLException {
-
-		abrirConexao();
+		
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
-	    //try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){ps.executeUpdate();}	
-	    try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};
-		System.out.println(strCreateTable);
-		String strDropTable = getDropTable(con, cliente);
+	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){System.out.println(ps);ps.executeUpdate();}	
+	    //try(PreparedStatement ps = con.prepareStatement(getDropTable(con, cliente))){ps.executeUpdate();};
+		//System.out.println(strCreateTable);
+		/*String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
 		/*PreparedStatement t = getSqlInsert(con, cliente); 
 		t.setInt(1, 5);
@@ -64,7 +68,8 @@ public class ExecuteSqlGen extends SqlGen {
 			e.printStackTrace();
 		}
 	}  
-
+   
+    /*
 	private void abrirConexao() throws SQLException {
 		String url = "jdbc:h2:D:/banco/trabalhosql";
 		String user = "sa";
@@ -75,10 +80,10 @@ public class ExecuteSqlGen extends SqlGen {
 	private void fecharConexao() throws SQLException {
 		con.close();
 	} */
+	}
 
 	protected String getCreateTable(Connection con, Object obj) {
 		try {
-			String nameTable;
 			Class<?> cl = obj.getClass();
 
 			StringBuilder sb = new StringBuilder();
@@ -423,7 +428,12 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	public static void main(String[] args) {
-		new ExecuteSqlGen();
+		try {
+			new ExecuteSqlGen();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

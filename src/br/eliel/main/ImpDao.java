@@ -1,7 +1,6 @@
 package br.eliel.main;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,8 +31,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-
-		}			
+		}		
+		System.out.println(ex);
 	}
 
 	@Override
@@ -45,13 +44,11 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	@Override
 	public void atualizar(Cliente t) {
 		// TODO Auto-generated method stub
-			
 	}
 
 	@Override
 	public void excluir(Integer k) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
