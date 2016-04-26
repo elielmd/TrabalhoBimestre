@@ -52,6 +52,11 @@ public class ExecuteSqlGen extends SqlGen {
 		t3.executeUpdate();
 		System.out.println(t3);*/
 		
+		PreparedStatement t4 = getSqlDeleteById(con, cliente);
+		t4.setInt(1, 5);
+		t4.executeUpdate();
+		System.out.println(t4);
+		
 		try {
 			abrirConexao();
 		} catch (SQLException e) {
@@ -390,7 +395,20 @@ public class ExecuteSqlGen extends SqlGen {
 			
 			Field[] atributos = obj.getClass().getDeclaredFields();			
 			String pk = "";
-			
+			for (int i = 0; i < atributos.length; i++) {
+				Field field = atributos[i];
+				if (field.isAnnotationPresent(Coluna.class)) {
+					Coluna anColuna = field.getAnnotation(Coluna.class);
+					if(anColuna.pk()){
+						if (pk.equalsIgnoreCase("")){
+							pk = anColuna.nome();
+						}else{
+							pk = pk + ", " + anColuna.nome();
+						}							
+					}
+				}
+			}
+			sb.append("DELETE FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?");
 			
 			try {				
 				ps =  con.prepareStatement(sb.toString());
