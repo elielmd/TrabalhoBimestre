@@ -25,10 +25,18 @@ public class ExecuteSqlGen extends SqlGen {
 		/*System.out.println(strCreateTable);
 		String strDropTable = getDropTable(con, cliente);
 		System.out.println(strDropTable);
-		PreparedStatement strGetSqlInsert = getSqlInsert(con, cliente);
-		System.out.println(strGetSqlInsert);
-		PreparedStatement strGetSqlSelectAll = getSqlSelectAll(con, cliente);
-		System.out.println(strGetSqlSelectAll);*/
+		/*PreparedStatement t = getSqlInsert(con, cliente); 
+		t.setInt(1, 5);
+		t.setString(2, cliente.getNome()); 
+		t.setString(3, cliente.getEndereco()); 
+		t.setString(4, cliente.getTelefone());
+		t.setInt(5, cliente.getEstadoCivil().ordinal());
+		t.executeUpdate();
+		System.out.println(t);*/
+		
+		PreparedStatement t1 = getSqlSelectAll(con, cliente);
+		t1.executeQuery();
+		System.out.println(t1);
 
 		try {
 			abrirConexao();
@@ -39,7 +47,7 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	private void abrirConexao() throws SQLException {
-		String url = "jdbc:h2:D:/banco/bancoNovo";
+		String url = "jdbc:h2:D:/banco/trabalhosql";
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
