@@ -43,19 +43,19 @@ public class ExecuteSqlGen extends SqlGen {
 		t2.executeQuery();
 		System.out.println(t2);*/
 		
-		/*PreparedStatement t3 = getSqlUpdateById(con, cliente);
+		PreparedStatement t3 = getSqlUpdateById(con, cliente);
 		t3.setInt(1, 5);
 		t3.setString(2, cliente.getNome()); 
 		t3.setString(3, cliente.getEndereco()); 
 		t3.setString(4, cliente.getTelefone());
 		t3.setInt(5, cliente.getEstadoCivil().ordinal());
 		t3.executeUpdate();
-		System.out.println(t3);*/
+		System.out.println(t3);
 		
-		PreparedStatement t4 = getSqlDeleteById(con, cliente);
+		/*PreparedStatement t4 = getSqlDeleteById(con, cliente);
 		t4.setInt(1, 5);
 		t4.executeUpdate();
-		System.out.println(t4);
+		System.out.println(t4);*/
 		
 		try {
 			abrirConexao();

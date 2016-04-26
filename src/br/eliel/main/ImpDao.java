@@ -1,5 +1,6 @@
 package br.eliel.main;
 
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -8,7 +9,7 @@ import com.sun.corba.se.pept.transport.Connection;
 import br.eliel.abstrata.Dao;
 
 public class ImpDao implements Dao<Cliente, Integer> {
-	private Connection con;
+	private Connection con = 
 
 	@Override
 	public void salvar(Cliente c) {
