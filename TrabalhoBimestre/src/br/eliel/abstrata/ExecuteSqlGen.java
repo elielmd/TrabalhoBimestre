@@ -267,8 +267,24 @@ public class ExecuteSqlGen extends SqlGen {
 
 	@Override
 	protected PreparedStatement getSqlSelectById(Connection con, Object obj) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = null;
+		try{
+			StringBuilder sb = new StringBuilder();
+			// Declaração da tabela.
+			String nomeTabela;
+			if (obj.getClass().isAnnotationPresent(Tabela.class)) {
+				Tabela anTabela = obj.getClass().getAnnotation(Tabela.class);
+				nomeTabela = anTabela.value();
+			} else {
+				nomeTabela = obj.getClass().getSimpleName().toUpperCase();
+			}			
+			
+			Field[] atributos = obj.getClass().getDeclaredFields();			
+			String pk = "";
+			
+		}catch(SecurityException e){
+			throw new RuntimeException(e);
+		}	
 	}
 
 	@Override
