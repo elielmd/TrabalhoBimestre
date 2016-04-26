@@ -8,15 +8,7 @@ import com.sun.corba.se.pept.transport.Connection;
 import br.eliel.abstrata.Dao;
 
 public class ImpDao implements Dao<Cliente, Integer> {
-	private Connection con = null;
-		
-	public Connection getCon() {
-		return con;
-	}
-
-	public void setCon(Connection con) {
-		this.con = con;
-	}
+	private Connection con;
 
 	@Override
 	public void salvar(Cliente c) {
