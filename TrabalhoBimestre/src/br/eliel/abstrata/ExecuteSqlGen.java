@@ -38,11 +38,20 @@ public class ExecuteSqlGen extends SqlGen {
 		t1.executeQuery();
 		System.out.println(t1);*/
 	    
-		PreparedStatement t2 = getSqlSelectById(con, cliente);
+		/*PreparedStatement t2 = getSqlSelectById(con, cliente);
 		t2.setInt(1, 5);
 		t2.executeQuery();
-		System.out.println(t2);
-
+		System.out.println(t2);*/
+		
+		PreparedStatement t3 = getSqlUpdateById(con, cliente);
+		t3.setInt(1, 5);
+		t3.setString(2, cliente.getNome()); 
+		t3.setString(3, cliente.getEndereco()); 
+		t3.setString(4, cliente.getTelefone());
+		t3.setInt(5, cliente.getEstadoCivil().ordinal());
+		t3.executeUpdate();
+		System.out.println(t3);
+		
 		try {
 			abrirConexao();
 		} catch (SQLException e) {
@@ -330,7 +339,39 @@ public class ExecuteSqlGen extends SqlGen {
 		Field[] atributos = cl.getDeclaredFields();
 		String pk = "";
 
-		
+		for (int i = 0; i < atributos.length; i++) {
+			Field field = atributos[i];
+			String nomeColuna;
+			if (field.isAnnotationPresent(Coluna.class)) {
+				Coluna anColuna = field.getAnnotation(Coluna.class);
+				if (anColuna.nome().isEmpty()) {
+					nomeColuna = field.getName().toUpperCase();
+				} else {
+					nomeColuna = anColuna.nome();
+				}
+				if (anColuna.pk()) {
+					pk = nomeColuna;
+				}
+			} else {
+				nomeColuna = field.getName().toUpperCase();
+			}
+			if (nomeColuna != pk) {
+				sb.append("  ").append(nomeColuna).append(" = ?");
+
+				if (i < atributos.length - 1) {
+					sb.append(", \n");
+				}
+			}
+		}
+
+		sb.append("\n WHERE \n  ").append(pk).append(" = ?");
+
+		try {
+			ps = con.prepareStatement(sb.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return ps;
 	}
 
