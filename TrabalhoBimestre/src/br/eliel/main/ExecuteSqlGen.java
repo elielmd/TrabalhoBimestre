@@ -1,4 +1,4 @@
-package br.eliel.abstrata;
+package br.eliel.main;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.lang.reflect.Method;
 
+import br.eliel.abstrata.SqlGen;
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
-import br.eliel.anotacoesmain.Cliente;
 import br.eliel.enums.EstadoCivil;
 
 public class ExecuteSqlGen extends SqlGen {

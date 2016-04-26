@@ -1,4 +1,4 @@
-package br.eliel.anotacoesmain;
+package br.eliel.main;
 
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
