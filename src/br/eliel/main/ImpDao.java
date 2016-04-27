@@ -2,13 +2,16 @@ package br.eliel.main;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import br.eliel.abstrata.Dao;
+import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
 	
+	ExecuteSqlGen ex = new ExecuteSqlGen();
 	private Connection con = null;
 	public Connection getCon() {
 		return con;
@@ -16,36 +19,48 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	public void setCon(Connection con) {
 		this.con = con;
 	} 
-	
-	private ExecuteSqlGen ex = new ExecuteSqlGen();
-    private List<Cliente> list = null;
-	
-	@Override
-	public void salvar(Cliente c) {
-		try {
-			 ps = ex.getSqlInsert(con,c);
-	         ps.executeUpdate();
-	         ps.close();
-	         System.out.println("TESTE");
-			/*PreparedStatement ps = ex.getSqlInsert(con, c);
-			ps.setInt(1, c.getId());
-			ps.setString(2, c.getNome());
-			ps.setString(3, c.getEndereco());
-			ps.setString(4, c.getTelefone());
-			ps.setInt(5, c.getEstadoCivil().ordinal());
-			ps.executeUpdate();
-			ps.close();*/
 
+	@Override
+	public void salvar(Cliente cliente) {
+		try {
+			PreparedStatement ps = ex.getSqlInsert(con, cliente);
+			ps.setInt(1, cliente.getId());
+			ps.setString(2, cliente.getNome());
+			ps.setString(3, cliente.getEndereco());
+			ps.setString(4, cliente.getTelefone());
+			ps.setInt(5, cliente.getEstadoCivil().ordinal());
+			ps.executeUpdate();
+			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
-		System.out.println(ex);
 	}
 
 	@Override
 	public Cliente buscar(Integer k) {
-		// TODO Auto-generated method stub
-		return null;
+		Cliente c = new Cliente();
+		
+		try {
+			PreparedStatement ps = ex.getSqlSelectById(con, new Cliente());
+			ps.setInt(1, k);
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				c.setId(rs.getInt("UsID"));
+				c.setNome(rs.getString("UsNome"));
+				c.setEndereco(rs.getString("UsEnderecos"));
+				c.setTelefone(rs.getString("UsTelefone"));
+				c.setEstadoCivil(EstadoCivil.getOpcao(rs.getInt("UsEstadoCivil")));
+			}			
+			
+			ps.close();
+			rs.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}				
+		
+		return c;
 	}
 
 	@Override
