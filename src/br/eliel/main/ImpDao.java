@@ -8,7 +8,7 @@ import java.util.List;
 import br.eliel.abstrata.Dao;
 
 public class ImpDao implements Dao<Cliente, Integer> {
-	private PreparedStatement ps = null;
+	
 	private Connection con = null;
 	public Connection getCon() {
 		return con;
