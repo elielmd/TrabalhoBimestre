@@ -21,7 +21,7 @@ public class ExecuteSqlGen extends SqlGen {
 		this.con = con;
 	}
 
-	public ExecuteSqlGen() throws SQLException {
+	public ExecuteSqlGen() {
 		
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 	    try(PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))){System.out.println(ps);ps.executeUpdate();}	
@@ -79,7 +79,10 @@ public class ExecuteSqlGen extends SqlGen {
 
 	private void fecharConexao() throws SQLException {
 		con.close();
-	} */
+	} */ catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	}
 
 	protected String getCreateTable(Connection con, Object obj) {
@@ -427,13 +430,8 @@ public class ExecuteSqlGen extends SqlGen {
 		return ps;	
 	}
 
-	public static void main(String[] args) {
-		try {
-			new ExecuteSqlGen();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws SQLException {
+		new ExecuteSqlGen();
 	}
 
 }

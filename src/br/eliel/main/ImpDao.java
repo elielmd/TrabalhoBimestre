@@ -8,6 +8,7 @@ import java.util.List;
 import br.eliel.abstrata.Dao;
 
 public class ImpDao implements Dao<Cliente, Integer> {
+	private PreparedStatement ps = null;
 	private Connection con = null;
 	public Connection getCon() {
 		return con;
@@ -16,18 +17,24 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		this.con = con;
 	} 
 	
+	private ExecuteSqlGen ex = new ExecuteSqlGen();
+    private List<Cliente> list = null;
+	
 	@Override
 	public void salvar(Cliente c) {
-		ExecuteSqlGen ex = new ExecuteSqlGen();
 		try {
-			PreparedStatement ps = ex.getSqlInsert(con, c);
+			 ps = ex.getSqlInsert(con,c);
+	         ps.executeUpdate();
+	         ps.close();
+	         System.out.println("TESTE");
+			/*PreparedStatement ps = ex.getSqlInsert(con, c);
 			ps.setInt(1, c.getId());
 			ps.setString(2, c.getNome());
 			ps.setString(3, c.getEndereco());
 			ps.setString(4, c.getTelefone());
 			ps.setInt(5, c.getEstadoCivil().ordinal());
 			ps.executeUpdate();
-			ps.close();
+			ps.close();*/
 
 		} catch (SQLException e) {
 			e.printStackTrace();
