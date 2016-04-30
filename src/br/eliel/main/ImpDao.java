@@ -21,14 +21,14 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	} 
 
 	@Override
-	public void salvar(Cliente cliente) {
+	public void salvar(Cliente t) {
 		try {
-			PreparedStatement ps = ex.getSqlInsert(con, cliente);
-			ps.setInt(1, cliente.getId());
-			ps.setString(2, cliente.getNome());
-			ps.setString(3, cliente.getEndereco());
-			ps.setString(4, cliente.getTelefone());
-			ps.setInt(5, cliente.getEstadoCivil().ordinal());
+			PreparedStatement ps = ex.getSqlInsert(con, t);
+			ps.setInt(1, t.getId());
+			ps.setString(2, t.getNome());
+			ps.setString(3, t.getEndereco());
+			ps.setString(4, t.getTelefone());
+			ps.setInt(5, t.getEstadoCivil().ordinal());
 			ps.executeUpdate();
 			ps.close();
 		} catch (SQLException e) {
@@ -64,29 +64,37 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	}
 
 	@Override
-	public void atualizar(Cliente cliente) {
+	public void atualizar(Cliente t) {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
 		
 		try {
-
-			PreparedStatement ps = ex.getSqlUpdateById(con, cliente);
-			ps.setInt(5, cliente.getId());
-			ps.setString(1, cliente.getNome());
-			ps.setString(2, cliente.getEndereco());
-			ps.setString(3, cliente.getTelefone());
-			ps.setInt(4, cliente.getEstadoCivil().ordinal());
+			PreparedStatement ps = ex.getSqlUpdateById(con, t);
+			ps.setInt(5, t.getId());
+			ps.setString(1, t.getNome());
+			ps.setString(2, t.getEndereco());
+			ps.setString(3, t.getTelefone());
+			ps.setInt(4, t.getEstadoCivil().ordinal());
 			ps.executeUpdate();
 			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-
 		}		
 	}
 
 	@Override
-	public void excluir(Integer k) {
-		// TODO Auto-generated method stub
+	public void excluir(Integer pk) {
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		
+		try {
+			PreparedStatement ps = ex.getSqlDeleteById(con, new Cliente());
+			ps.setInt(1, pk);
+			ps.executeUpdate();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
 	}
 
 	@Override
