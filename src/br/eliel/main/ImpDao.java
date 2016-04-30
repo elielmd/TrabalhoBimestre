@@ -48,9 +48,9 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			while (rs.next()) {
 				c.setId(rs.getInt("UsID"));
 				c.setNome(rs.getString("UsNome"));
-				c.setEndereco(rs.getString("UsEnderecos"));
+				c.setEndereco(rs.getString("UsEndereco"));
 				c.setTelefone(rs.getString("UsTelefone"));
-				c.setEstadoCivil(EstadoCivil.getOpcao(rs.getInt("UsEstadoCivil")));
+				c.EstadoCivil(EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
 			}			
 			
 			ps.close();
@@ -64,8 +64,24 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	}
 
 	@Override
-	public void atualizar(Cliente t) {
-		// TODO Auto-generated method stub
+	public void atualizar(Cliente cliente) {
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		
+		try {
+
+			PreparedStatement ps = ex.getSqlUpdateById(con, cliente);
+			ps.setInt(5, cliente.getId());
+			ps.setString(1, cliente.getNome());
+			ps.setString(2, cliente.getEndereco());
+			ps.setString(3, cliente.getTelefone());
+			ps.setInt(4, cliente.getEstadoCivil().ordinal());
+			ps.executeUpdate();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}		
 	}
 
 	@Override
