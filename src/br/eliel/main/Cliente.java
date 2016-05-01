@@ -7,19 +7,19 @@ import br.eliel.enums.EstadoCivil;
 @Tabela("CAD_USUARIO")
 public class Cliente {
 
-	@Coluna(pk=true, nome="UsID", tamanho = -1)
+	@Coluna(pk = true, nome = "UsID", tamanho = -1)
 	private int id;
 
-	@Coluna(nome="UsNome", tamanho = 100)
+	@Coluna(nome = "UsNome", tamanho = 100)
 	private String nome;
-	
-	@Coluna(nome="UsEndereco", tamanho = 255)
+
+	@Coluna(nome = "UsEndereco", tamanho = 255)
 	private String endereco;
-	
-	@Coluna(nome="UsTelefone", tamanho = 20)
+
+	@Coluna(nome = "UsTelefone", tamanho = 20)
 	private String telefone;
-	
-	@Coluna(nome="UsEstadoCivil", tamanho = 100)
+
+	@Coluna(nome = "UsEstadoCivil", tamanho = 100)
 	private EstadoCivil estadoCivil;
 
 	public int getId() {
@@ -53,7 +53,7 @@ public class Cliente {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	
+
 	public EstadoCivil getEstadoCivil() {
 		return estadoCivil;
 	}

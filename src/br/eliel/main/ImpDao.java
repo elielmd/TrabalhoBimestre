@@ -11,21 +11,23 @@ import br.eliel.abstrata.Dao;
 import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
-	
+
 	ExecuteSqlGen ex = new ExecuteSqlGen();
 	private Connection con = null;
+
 	public Connection getCon() {
 		return con;
 	}
+
 	public void setCon(Connection con) {
 		this.con = con;
-	} 
+	}
 
-	public void criarTabela(Cliente t){
+	public void criarTabela(Cliente t) {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
-		
+
 		try {
-			String csql = ex.getCreateTable(con, t);	
+			String csql = ex.getCreateTable(con, t);
 			PreparedStatement ps = con.prepareStatement(csql);
 			ps.executeUpdate();
 			ps.close();
@@ -33,10 +35,10 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		}			
-		
+		}
+
 	}
-	
+
 	@Override
 	public void salvar(Cliente t) {
 		try {
@@ -50,40 +52,56 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			ps.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
+	}
+
+	public void apagarTabela(Cliente t) {
+		ExecuteSqlGen gerador = new ExecuteSqlGen();
+
+		try {
+			String sql = gerador.getDropTable(con, t);
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.executeUpdate();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+
 	}
 
 	@Override
 	public Cliente buscar(Integer k) {
 		Cliente c = new Cliente();
-		
+
 		try {
 			PreparedStatement ps = ex.getSqlSelectById(con, new Cliente());
 			ps.setInt(1, k);
 			ResultSet rs = ps.executeQuery();
-			
+
 			while (rs.next()) {
 				c.setId(rs.getInt("UsID"));
 				c.setNome(rs.getString("UsNome"));
 				c.setEndereco(rs.getString("UsEndereco"));
 				c.setTelefone(rs.getString("UsTelefone"));
-				c.EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
-			}			
-			
+				// c.EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
+			}
+
 			ps.close();
 			rs.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}				
-		
+		}
+
 		return c;
 	}
 
 	@Override
 	public void atualizar(Cliente t) {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
-		
+
 		try {
 			PreparedStatement ps = ex.getSqlUpdateById(con, t);
 			ps.setInt(5, t.getId());
@@ -96,13 +114,13 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
 	public void excluir(Integer pk) {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
-		
+
 		try {
 			PreparedStatement ps = ex.getSqlDeleteById(con, new Cliente());
 			ps.setInt(1, pk);
@@ -111,37 +129,37 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
 	public List<Cliente> listarTodos() {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
 		List<Cliente> Cliente = new ArrayList<Cliente>();
-		
+
 		try {
 			PreparedStatement ps = ex.getSqlSelectAll(con, new Cliente());
 			ResultSet exibir = ps.executeQuery();
-			
+
 			while (exibir.next()) {
-				
+
 				Cliente c = new Cliente();
-				c.setId(exibir.getInt("cli_codigo"));
-				c.setNome(exibir.getString("cli_nome"));
-				c.setEndereco(exibir.getString("cli_endereco"));
-				c.setTelefone(exibir.getString("cli_fone"));
-				c.setEstadoCivil(EstadoCivil.getPorCodigo(exibir.getInt("cli_estcivil")));
-				
+				c.setId(exibir.getInt("UsID"));
+				c.setNome(exibir.getString("UsNome"));
+				c.setEndereco(exibir.getString("UsEndereco"));
+				c.setTelefone(exibir.getString("UsTelefone"));
+				// c.setEstadoCivil(EstadoCivil.getPorCodigo(exibir.getInt("UsEstadoCivil")));
+
 				Cliente.add(c);
-			}			
-			
+			}
+
 			ps.close();
 			exibir.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}				
-		
+		}
+
 		return Cliente;
 	}
 }
