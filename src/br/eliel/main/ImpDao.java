@@ -21,6 +21,22 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		this.con = con;
 	} 
 
+	public void criarTabela(Cliente t){
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		
+		try {
+			String csql = ex.getCreateTable(con, t);	
+			PreparedStatement ps = con.prepareStatement(csql);
+			ps.executeUpdate();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}			
+		
+	}
+	
 	@Override
 	public void salvar(Cliente t) {
 		try {
