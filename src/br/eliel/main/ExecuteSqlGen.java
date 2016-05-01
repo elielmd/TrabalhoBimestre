@@ -21,7 +21,7 @@ public class ExecuteSqlGen extends SqlGen {
 		this.con = con;
 	}
 
-	public ExecuteSqlGen() {
+	/*public ExecuteSqlGen() {
 
 		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
 		try (PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))) {
@@ -63,11 +63,11 @@ public class ExecuteSqlGen extends SqlGen {
 		 * "sa"; con = DriverManager.getConnection(url, user, pass); }
 		 * 
 		 * private void fecharConexao() throws SQLException { con.close(); }
-		 */ catch (SQLException e) {
+		  catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	protected String getCreateTable(Connection con, Object obj) {
 		try {
@@ -415,8 +415,8 @@ public class ExecuteSqlGen extends SqlGen {
 		return ps;
 	}
 
-	public static void main(String[] args) throws SQLException {
+	/*public static void main(String[] args) throws SQLException {
 		new ExecuteSqlGen();
-	}
+	}*/
 
 }
