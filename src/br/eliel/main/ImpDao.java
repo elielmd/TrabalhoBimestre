@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.eliel.abstrata.Dao;
@@ -50,7 +51,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 				c.setNome(rs.getString("UsNome"));
 				c.setEndereco(rs.getString("UsEndereco"));
 				c.setTelefone(rs.getString("UsTelefone"));
-				c.EstadoCivil(EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
+				c.EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
 			}			
 			
 			ps.close();
@@ -99,7 +100,32 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	@Override
 	public List<Cliente> listarTodos() {
-		// TODO Auto-generated method stub
-		return null;
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		List<Cliente> Cliente = new ArrayList<Cliente>();
+		
+		try {
+			PreparedStatement ps = ex.getSqlSelectAll(con, new Cliente());
+			ResultSet exibir = ps.executeQuery();
+			
+			while (exibir.next()) {
+				
+				Cliente c = new Cliente();
+				c.setId(exibir.getInt("cli_codigo"));
+				c.setNome(exibir.getString("cli_nome"));
+				c.setEndereco(exibir.getString("cli_endereco"));
+				c.setTelefone(exibir.getString("cli_fone"));
+				c.setEstadoCivil(EstadoCivil.getPorCodigo(exibir.getInt("cli_estcivil")));
+				
+				Cliente.add(c);
+			}			
+			
+			ps.close();
+			exibir.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}				
+		
+		return Cliente;
 	}
 }
