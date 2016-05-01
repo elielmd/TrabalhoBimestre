@@ -242,7 +242,7 @@ public class ExecuteSqlGen extends SqlGen {
 		System.out.println(add);
 
 		try {
-			ps = con.prepareStatement(add);
+			ps = con.prepareStatement(sb.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
