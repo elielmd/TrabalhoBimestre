@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import br.eliel.abstrata.SqlGen;
 import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
-import br.eliel.enums.EstadoCivil;
 
 public class ExecuteSqlGen extends SqlGen {
 
@@ -135,7 +134,7 @@ public class ExecuteSqlGen extends SqlGen {
 				sb.append("\n\t").append(nomeColuna).append(" ").append(tipoColuna);
 			}
 
-			sb.append(",\n\tPRIMARY KEY( ");
+			sb.append(",\n\tPRIMARY KEY(");
 			for (int x = 0, achou = 0; x < atributos.length; x++) {
 				Field fields = atributos[x];
 				if (fields.isAnnotationPresent(Coluna.class)) {
@@ -180,9 +179,8 @@ public class ExecuteSqlGen extends SqlGen {
 			}
 
 			sb.append("DROP TABLE ").append(nomeTabela).append(";");
-
-			// Statement exeT = con.createStatement();
-			// exeT.executeUpdate(sb.toString());
+			
+			System.out.println(sb);
 
 			return sb.toString();
 		} catch (SecurityException e) {
@@ -195,6 +193,7 @@ public class ExecuteSqlGen extends SqlGen {
 	protected PreparedStatement getSqlInsert(Connection con, Object obj) {
 		Class<?> cl = obj.getClass();
 		StringBuilder sb = new StringBuilder();
+		PreparedStatement ps = null;
 		String nomeTabela;
 
 		if (cl.isAnnotationPresent(Tabela.class)) {
@@ -240,15 +239,11 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		sb.append(");");
 		String add = sb.toString();
-		// System.out.println(add);
-
-		PreparedStatement ps = null;
+		System.out.println(add);
 
 		try {
 			ps = con.prepareStatement(add);
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
 		return ps;

@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.eliel.abstrata.Dao;
-import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
 
-	ExecuteSqlGen ex = new ExecuteSqlGen();
 	private Connection con = null;
 
 	public Connection getCon() {
@@ -21,6 +19,22 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	public void setCon(Connection con) {
 		this.con = con;
+	}
+	
+	public void apagarTabela(Cliente t) {
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		
+		try {
+			String csql = ex.getDropTable(con, t);
+			PreparedStatement ps = con.prepareStatement(csql);
+			ps.executeUpdate();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		}
+
 	}
 
 	public void criarTabela(Cliente t) {
@@ -38,11 +52,13 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 
 	}
-
+	
 	@Override
 	public void salvar(Cliente t) {
+		ExecuteSqlGen ex = new ExecuteSqlGen();
+		
 		try {
-			PreparedStatement ps = ex.getSqlInsert(con, t);
+			PreparedStatement ps = ex.getSqlInsert(con, t);		
 			ps.setInt(1, t.getId());
 			ps.setString(2, t.getNome());
 			ps.setString(3, t.getEndereco());
@@ -55,24 +71,10 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 	}
 
-	public void apagarTabela(Cliente t) {
-		ExecuteSqlGen gerador = new ExecuteSqlGen();
-
-		try {
-			String sql = gerador.getDropTable(con, t);
-			PreparedStatement ps = con.prepareStatement(sql);
-			ps.executeUpdate();
-			ps.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		}
-
-	}
 
 	@Override
 	public Cliente buscar(Integer k) {
+		ExecuteSqlGen ex = new ExecuteSqlGen();
 		Cliente c = new Cliente();
 
 		try {

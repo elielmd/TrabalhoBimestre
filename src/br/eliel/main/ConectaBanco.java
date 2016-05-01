@@ -13,15 +13,6 @@ public class ConectaBanco {
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
-
-		try {
-			Class.forName("jdbc:h2:D:/banco/trabalhosql");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		con = DriverManager.getConnection(url, user, pass);
 		return con;
 	}
 
