@@ -58,6 +58,10 @@ public class Cliente {
 		return estadoCivil;
 	}
 
+	public void setEstadoCivil(EstadoCivil estadoCivil) {
+		this.estadoCivil = estadoCivil;
+	}
+
 	public Cliente() {
 		this(0, null, null, null, null);
 	}

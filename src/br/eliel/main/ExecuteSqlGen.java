@@ -2,6 +2,7 @@ package br.eliel.main;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import br.eliel.abstrata.SqlGen;
@@ -10,63 +11,32 @@ import br.eliel.anotacoes.Tabela;
 
 public class ExecuteSqlGen extends SqlGen {
 
-	private Connection con = null;
+	private Connection con;
 
-	public Connection getCon() {
+	public ExecuteSqlGen() throws SQLException {
+
+		abrirConexao();
+
+	}
+
+	public Connection abrirConexao() throws SQLException {
+		String url = "jdbc:h2:D:/banco/trabalhosql";
+		String user = "sa";
+		String pass = "sa";
+		con = DriverManager.getConnection(url, user, pass);
+		if (con == null) {
+			try {
+				abrirConexao();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return con;
 	}
 
-	public void setCon(Connection con) {
-		this.con = con;
+	public void fecharConexao() throws SQLException {
+		con.close();
 	}
-
-	/*public ExecuteSqlGen() {
-
-		Cliente cliente = new Cliente(1, "Eliel", "batata", "33333", EstadoCivil.GAMEOVER);
-		try (PreparedStatement ps = con.prepareStatement(getCreateTable(con, cliente))) {
-			System.out.println(ps);
-			ps.executeUpdate();
-		}
-		// try(PreparedStatement ps = con.prepareStatement(getDropTable(con,
-		// cliente))){ps.executeUpdate();};
-		// System.out.println(strCreateTable);
-		/*
-		 * String strDropTable = getDropTable(con, cliente);
-		 * System.out.println(strDropTable); /*PreparedStatement t =
-		 * getSqlInsert(con, cliente); t.setInt(1, 5); t.setString(2,
-		 * cliente.getNome()); t.setString(3, cliente.getEndereco());
-		 * t.setString(4, cliente.getTelefone()); t.setInt(5,
-		 * cliente.getEstadoCivil().ordinal()); t.executeUpdate();
-		 * System.out.println(t);
-		 * 
-		 * PreparedStatement t1 = getSqlSelectAll(con, cliente);
-		 * t1.executeQuery(); System.out.println(t1);
-		 * 
-		 * PreparedStatement t2 = getSqlSelectById(con, cliente); t2.setInt(1,
-		 * 5); t2.executeQuery(); System.out.println(t2);
-		 * 
-		 * PreparedStatement t3 = getSqlUpdateById(con, cliente); t3.setInt(1,
-		 * 5); t3.setString(2, cliente.getNome()); t3.setString(3,
-		 * cliente.getEndereco()); t3.setString(4, cliente.getTelefone());
-		 * t3.setInt(5, cliente.getEstadoCivil().ordinal()); t3.executeUpdate();
-		 * System.out.println(t3);
-		 * 
-		 * PreparedStatement t4 = getSqlDeleteById(con, cliente); t4.setInt(1,
-		 * 5); t4.executeUpdate(); System.out.println(t4);
-		 * 
-		 * try { abrirConexao(); } catch (SQLException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } }
-		 * 
-		 * /* private void abrirConexao() throws SQLException { String url =
-		 * "jdbc:h2:D:/banco/trabalhosql"; String user = "sa"; String pass =
-		 * "sa"; con = DriverManager.getConnection(url, user, pass); }
-		 * 
-		 * private void fecharConexao() throws SQLException { con.close(); }
-		  catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 
 	protected String getCreateTable(Connection con, Object obj) {
 		try {
@@ -179,7 +149,7 @@ public class ExecuteSqlGen extends SqlGen {
 			}
 
 			sb.append("DROP TABLE ").append(nomeTabela).append(";");
-			
+
 			System.out.println(sb);
 
 			return sb.toString();
@@ -189,35 +159,39 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 	}
 
-	@Override
 	protected PreparedStatement getSqlInsert(Connection con, Object obj) {
-		Class<?> cl = obj.getClass();
+		Class<? extends Object> cl = obj.getClass();
+
 		StringBuilder sb = new StringBuilder();
 		PreparedStatement ps = null;
-		String nomeTabela;
 
+		String nomeTabela;
 		if (cl.isAnnotationPresent(Tabela.class)) {
-			Tabela table = cl.getAnnotation(Tabela.class);
-			nomeTabela = table.value();
+			Tabela anotacaoTabela = cl.getAnnotation(Tabela.class);
+			nomeTabela = anotacaoTabela.value();
+
 		} else {
 			nomeTabela = cl.getSimpleName().toUpperCase();
 		}
-
 		sb.append("INSERT INTO ").append(nomeTabela).append(" (");
 
 		Field[] atributos = cl.getDeclaredFields();
 
 		for (int i = 0; i < atributos.length; i++) {
+
 			Field field = atributos[i];
+
 			String nomeColuna;
 
 			if (field.isAnnotationPresent(Coluna.class)) {
-				Coluna column = field.getAnnotation(Coluna.class);
-				if (column.nome().isEmpty()) {
+				Coluna anotacaoColuna = field.getAnnotation(Coluna.class);
+
+				if (anotacaoColuna.nome().isEmpty()) {
 					nomeColuna = field.getName().toUpperCase();
 				} else {
-					nomeColuna = column.nome();
+					nomeColuna = anotacaoColuna.nome();
 				}
+
 			} else {
 				nomeColuna = field.getName().toUpperCase();
 			}
@@ -232,21 +206,25 @@ public class ExecuteSqlGen extends SqlGen {
 		sb.append(") VALUES (");
 
 		for (int i = 0; i < atributos.length; i++) {
-			if (i > 0)
+			if (i > 0) {
 				sb.append(", ");
-
-			sb.append("?");
+			}
+			sb.append('?');
 		}
-		sb.append(");");
+		sb.append(')');
 		String add = sb.toString();
 		System.out.println(add);
+		System.out.println(con);
 
 		try {
-			ps = con.prepareStatement(sb.toString());
+			ps = con.prepareStatement(add);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		return ps;
+
 	}
 
 	@Override
@@ -261,7 +239,7 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		sb.append("SELECT * FROM ").append(nomeTabela).append(";");
 		String selectFrom = sb.toString();
-		// System.out.println(selectFrom);
+		System.out.println(selectFrom);
 		PreparedStatement ps = null;
 
 		try {
@@ -303,6 +281,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("SELECT * FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?");
+			System.out.println(sb.toString());
 			try {
 				ps = con.prepareStatement(sb.toString());
 			} catch (SQLException e) {
@@ -358,6 +337,7 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 
 		sb.append("\n WHERE \n  ").append(pk).append(" = ?");
+		System.out.println(sb.toString());
 
 		try {
 			ps = con.prepareStatement(sb.toString());
@@ -397,6 +377,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("DELETE FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?");
+			System.out.println(sb.toString());
 
 			try {
 				ps = con.prepareStatement(sb.toString());
@@ -409,9 +390,5 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		return ps;
 	}
-
-	/*public static void main(String[] args) throws SQLException {
-		new ExecuteSqlGen();
-	}*/
 
 }
