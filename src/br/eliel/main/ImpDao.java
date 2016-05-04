@@ -1,14 +1,10 @@
 package br.eliel.main;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import br.eliel.abstrata.Dao;
-import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
 
@@ -51,7 +47,31 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	@Override
 	public void salvar(Cliente t) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement add = getImp().getSqlInsert(getImp().getCon(), t);
+
+		Cliente c = (Cliente) t;
+
+		try {
+			add.setInt(1, c.getId());
+			add.setString(2, c.getNome());
+			add.setString(3, c.getEndereco());
+			add.setString(4, c.getTelefone());
+			add.setInt(5, c.getEstadoCivil().ordinal());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Codigo ID...: " + c.getId());
+		System.out.println("Nome Cliente: " + c.getNome());
+		System.out.println("Endereco....: " + c.getEndereco());
+		System.out.println("Num.Telefone: " + c.getTelefone());
+		System.out.println("Estado.Civil: " + c.getEstadoCivil());
+
+		try {
+			add.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 

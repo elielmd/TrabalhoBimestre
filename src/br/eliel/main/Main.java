@@ -9,10 +9,12 @@ public class Main extends ImpDao{
 	public Main() throws SQLException {
 		
 		Cliente usu1 = new Cliente(1, "Luke Skywalker", "Polis Massa", "7777-7777", EstadoCivil.SOLTEIRO);
-
+		
 		apagarTabela(usu1);
 		
 		criarTabela(usu1);
+		
+		salvar(usu1);
 
 		/*Cliente usu1 = new Cliente();
 		usu1.setId(1);

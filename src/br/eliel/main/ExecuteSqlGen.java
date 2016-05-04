@@ -207,7 +207,6 @@ public class ExecuteSqlGen extends SqlGen {
 		sb.append(')');
 		String add = sb.toString();
 		System.out.println(add);
-		System.out.println(con);
 
 		try {
 			ps = con.prepareStatement(add);
