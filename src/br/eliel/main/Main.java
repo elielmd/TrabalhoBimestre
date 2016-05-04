@@ -20,6 +20,8 @@ public class Main extends ImpDao{
 		salvar(cliente3);
 		
 		listarTodos();
+		
+		buscar(cliente1);
 
 		/*Cliente usu1 = new Cliente();
 		usu1.setId(1)

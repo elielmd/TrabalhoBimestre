@@ -57,8 +57,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		try {
 			add.setInt(1, c.getId());
 			add.setString(2, c.getNome());
-			add.setString(3, c.getEndereco());
-			add.setString(4, c.getTelefone());
+			add.setString(3, c.getTelefone());
+			add.setString(4, c.getEndereco());
 			add.setInt(5, c.getEstadoCivil().ordinal());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,8 +66,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		System.out.println("Codigo ID...: " + c.getId());
 		System.out.println("Nome Cliente: " + c.getNome());
-		System.out.println("Endereco....: " + c.getEndereco());
 		System.out.println("Num.Telefone: " + c.getTelefone());
+		System.out.println("Endereco....: " + c.getEndereco());
 		System.out.println("Estado.Civil: " + c.getEstadoCivil());
 
 		try {
@@ -78,9 +78,24 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	}
 
-	@Override
-	public Cliente buscar(Integer k) throws SQLException {
-		// TODO Auto-generated method stub
+	public Object buscar(Cliente k) throws SQLException {
+		PreparedStatement exbusca = imp.getSqlSelectById(imp.getCon(), k);
+
+		ResultSet exresult;
+
+		try {
+			exresult = exbusca.executeQuery();
+			while (exresult.next()) {
+				System.out.println("Codigo ID...: " + exresult.getInt("UsID"));
+				System.out.println("Nome Cliente: " + exresult.getString("UsNome"));
+				System.out.println("Num.Telefone: " + exresult.getString("UsTelefone"));
+				System.out.println("Endereco....: " + exresult.getString("UsEndereco"));
+				System.out.println("Estado.Civil: " + EstadoCivil.values()[exresult.getInt("UsEstadoCivil")]);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
@@ -114,7 +129,6 @@ public class ImpDao implements Dao<Cliente, Integer> {
 				cli.setEndereco(rs.getString("UsEndereco"));
 				cli.setEstadoCivil(EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
 				c.add(cli);
-
 			}
 
 		} catch (SQLException e) {
@@ -125,12 +139,18 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		for (Cliente cliente: c){
 			System.out.println("Codigo ID...: " + cliente.getId());
 			System.out.println("Nome Cliente: " + cliente.getNome());
-			System.out.println("Endereco....: " + cliente.getEndereco());
 			System.out.println("Num.Telefone: " + cliente.getTelefone());
+			System.out.println("Endereco....: " + cliente.getEndereco());
 			System.out.println("Estado.Civil: " + cliente.getEstadoCivil());
 		}
 
 		return c;
+	}
+
+	@Override
+	public Cliente buscar(Integer k) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*
