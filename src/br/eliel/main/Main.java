@@ -8,16 +8,21 @@ public class Main extends ImpDao{
 
 	public Main() throws SQLException {
 		
-		Cliente usu1 = new Cliente(1, "Luke Skywalker", "Polis Massa", "7777-7777", EstadoCivil.SOLTEIRO);
+		Cliente cliente1 = new Cliente(1, "Luke Skywalker", "Polis Massa", "7777-7777", EstadoCivil.SOLTEIRO);
+		apagarTabela(cliente1);
+		criarTabela(cliente1);
+		salvar(cliente1);
 		
-		apagarTabela(usu1);
+		Cliente cliente2 = new Cliente(2,"Chewbacca","8888-8888","Kashyyyk",EstadoCivil.SOLTEIRO);
+		salvar(cliente2);
 		
-		criarTabela(usu1);
+		Cliente cliente3 = new Cliente(3,"Han Solo","9999-9999","Corellia",EstadoCivil.GAMEOVER);
+		salvar(cliente3);
 		
-		salvar(usu1);
+		listarTodos();
 
 		/*Cliente usu1 = new Cliente();
-		usu1.setId(1);
+		usu1.setId(1)
 		usu1.setNome("Luke Skywalker");
 		usu1.setTelefone("7777-7777");
 		usu1.setEndereco("Polis Massa");
@@ -25,7 +30,7 @@ public class Main extends ImpDao{
 
 		Cliente usu2 = new Cliente();
 		usu2.setId(2);
-		usu2.setNome("Chewbacca");
+		usu2.setNome(Chewbacca);
 		usu2.setTelefone("8888-8888");
 		usu2.setEndereco("Kashyyyk");
 		usu2.setEstadoCivil(EstadoCivil.SOLTEIRO);

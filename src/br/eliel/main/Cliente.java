@@ -4,7 +4,7 @@ import br.eliel.anotacoes.Coluna;
 import br.eliel.anotacoes.Tabela;
 import br.eliel.enums.EstadoCivil;
 
-@Tabela("CAD_USUARIO")
+@Tabela("CAD_CLIENTE")
 public class Cliente {
 
 	@Coluna(pk = true, nome = "UsID", tamanho = -1)

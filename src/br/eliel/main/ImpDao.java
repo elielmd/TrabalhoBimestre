@@ -1,10 +1,13 @@
 package br.eliel.main;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.eliel.abstrata.Dao;
+import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
 
@@ -95,8 +98,39 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	@Override
 	public List<Cliente> listarTodos() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement ps = imp.getSqlSelectAll(imp.getCon(), new Cliente());
+
+		List<Cliente> c = new ArrayList<Cliente>();
+
+		ResultSet rs = null;
+
+		try {
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				Cliente cli = new Cliente();
+				cli.setId(rs.getInt("UsID"));
+				cli.setNome(rs.getString("UsNome"));
+				cli.setTelefone(rs.getString("UsTelefone"));
+				cli.setEndereco(rs.getString("UsEndereco"));
+				cli.setEstadoCivil(EstadoCivil.values()[rs.getInt("UsEstadoCivil")]);
+				c.add(cli);
+
+			}
+
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+
+		for (Cliente cliente: c){
+			System.out.println("Codigo ID...: " + cliente.getId());
+			System.out.println("Nome Cliente: " + cliente.getNome());
+			System.out.println("Endereco....: " + cliente.getEndereco());
+			System.out.println("Num.Telefone: " + cliente.getTelefone());
+			System.out.println("Estado.Civil: " + cliente.getEstadoCivil());
+		}
+
+		return c;
 	}
 
 	/*

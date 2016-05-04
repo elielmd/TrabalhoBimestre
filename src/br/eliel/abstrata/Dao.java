@@ -3,6 +3,8 @@ package br.eliel.abstrata;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.eliel.main.Cliente;
+
 public interface Dao<T, K> {
 
 	public void salvar(T t) throws SQLException;
