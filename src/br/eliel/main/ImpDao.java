@@ -30,6 +30,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	}
 
 	public void apagarTabela(Cliente t) throws SQLException {
+		//seta conexão
 		String exsql = getImp().getDropTable(getImp().getCon(), t);
 		System.out.println("COMANDO DROP");
 		System.out.println("________________________________________________________");
@@ -88,10 +89,10 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	@Override
 	public Cliente buscar(Cliente id) throws SQLException {
 		PreparedStatement exbusca = imp.getSqlSelectById(imp.getCon(), id);
-		
+
 		ResultSet exresult;
 		Cliente cli = (Cliente) id;
-		exbusca.setInt(1,cli.getId());
+		exbusca.setInt(1, cli.getId());
 		System.out.println("\nCOMANDO SELECT BY ID");
 		System.out.println("________________________________________________________");
 		try {
@@ -107,8 +108,6 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-				
 
 		return null;
 	}
@@ -144,13 +143,15 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 	}
 
-	/*@Override
-	public void excluir(Integer k) throws SQLException {
-		PreparedStatement psexcluir = imp.getSqlDeleteById(imp.getCon(), k);
+	@Override
+	public void excluir(Cliente id) throws SQLException {
+		PreparedStatement psexcluir = imp.getSqlDeleteById(imp.getCon(), id);
 
-		Cliente c = (Cliente) k;
+		Cliente c = (Cliente) id;
 
 		int buscar = 0;
+		System.out.println("\nCOMANDO DELETE");
+		System.out.println("_________________________________________________________");
 
 		try {
 			psexcluir.setInt(1, c.getId());
@@ -160,6 +161,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		try {
 			buscar = psexcluir.executeUpdate();
+			System.out.println(psexcluir);
 			System.out.println("ID...........: " + c.getId());
 			System.out.println("Nome........: " + c.getNome());
 			System.out.println("Telefone....: " + c.getTelefone());
@@ -170,7 +172,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			e.printStackTrace();
 		}
 
-	}*/
+	}
 
 	@Override
 	public List<Cliente> listarTodos() throws SQLException {
@@ -179,9 +181,12 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		List<Cliente> c = new ArrayList<Cliente>();
 
 		ResultSet rs = null;
+		System.out.println("\nCOMANDO SELECT ALL");
+		System.out.println("_________________________________________________________");
 
 		try {
 			rs = ps.executeQuery();
+			System.out.println(ps);
 			while (rs.next()) {
 				Cliente cli = new Cliente();
 				cli.setId(rs.getInt("UsID"));
@@ -206,94 +211,4 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 		return c;
 	}
-
-	@Override
-	public void excluir(Cliente id) throws SQLException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/*
-	 * public void criarTabela(Cliente t) throws SQLException { ExecuteSqlGen ex
-	 * = new ExecuteSqlGen();
-	 * 
-	 * try { String csql = ex.getCreateTable(con, t); PreparedStatement ps =
-	 * con.prepareStatement(csql); ps.executeUpdate(); ps.close();
-	 * 
-	 * } catch (SQLException e) { e.printStackTrace();
-	 * 
-	 * }
-	 * 
-	 * }
-	 * 
-	 * @Override public void salvar(Cliente t) throws SQLException {
-	 * ExecuteSqlGen ex = new ExecuteSqlGen();
-	 * 
-	 * try { PreparedStatement pst = ex.getSqlInsert(con, t); pst.setInt(1,
-	 * t.getId()); pst.setString(2, t.getNome()); pst.setString(3,
-	 * t.getEndereco()); pst.setString(4, t.getTelefone()); pst.setInt(5,
-	 * t.getEstadoCivil().ordinal());
-	 * 
-	 * pst.executeUpdate(); pst.close(); } catch (SQLException e) {
-	 * e.printStackTrace(); } }
-	 * 
-	 * @Override public Cliente buscar(Integer k) throws SQLException {
-	 * ExecuteSqlGen ex = new ExecuteSqlGen(); Cliente c = new Cliente();
-	 * 
-	 * try { PreparedStatement ps = ex.getSqlSelectById(con, new Cliente());
-	 * ps.setInt(1, k); ResultSet rs = ps.executeQuery();
-	 * 
-	 * while (rs.next()) { c.setId(rs.getInt("UsID"));
-	 * c.setNome(rs.getString("UsNome"));
-	 * c.setEndereco(rs.getString("UsEndereco"));
-	 * c.setTelefone(rs.getString("UsTelefone"));
-	 * c.setEstadoCivil(EstadoCivil.getOpcao(rs.getInt("UsEstadoCivil"))); }
-	 * 
-	 * ps.close(); rs.close();
-	 * 
-	 * } catch (SQLException e) { e.printStackTrace(); }
-	 * 
-	 * return c; }
-	 * 
-	 * @Override public void atualizar(Cliente t) throws SQLException {
-	 * ExecuteSqlGen ex = new ExecuteSqlGen();
-	 * 
-	 * try { PreparedStatement ps = ex.getSqlUpdateById(con, t); ps.setInt(5,
-	 * t.getId()); ps.setString(1, t.getNome()); ps.setString(2,
-	 * t.getEndereco()); ps.setString(3, t.getTelefone()); ps.setInt(4,
-	 * t.getEstadoCivil().ordinal()); ps.executeUpdate(); ps.close();
-	 * 
-	 * } catch (SQLException e) { e.printStackTrace(); } }
-	 * 
-	 * @Override public void excluir(Integer pk) throws SQLException {
-	 * ExecuteSqlGen ex = new ExecuteSqlGen();
-	 * 
-	 * try { PreparedStatement ps = ex.getSqlDeleteById(con, new Cliente());
-	 * ps.setInt(1, pk); ps.executeUpdate(); ps.close();
-	 * 
-	 * } catch (SQLException e) { e.printStackTrace(); } }
-	 * 
-	 * @Override public List<Cliente> listarTodos() throws SQLException {
-	 * ExecuteSqlGen ex = new ExecuteSqlGen(); List<Cliente> Cliente = new
-	 * ArrayList<Cliente>();
-	 * 
-	 * try { PreparedStatement ps = ex.getSqlSelectAll(con, new Cliente());
-	 * ResultSet rs = ps.executeQuery();
-	 * 
-	 * while (rs.next()) {
-	 * 
-	 * Cliente c = new Cliente(); c.setId(rs.getInt("UsID"));
-	 * c.setNome(rs.getString("UsNome"));
-	 * c.setEndereco(rs.getString("UsEndereco"));
-	 * c.setTelefone(rs.getString("UsTelefone"));
-	 * c.setEstadoCivil(EstadoCivil.getOpcao(rs.getInt("UsEstadoCivil")));
-	 * 
-	 * Cliente.add(c); }
-	 * 
-	 * ps.close(); rs.close();
-	 * 
-	 * } catch (SQLException e) { e.printStackTrace(); }
-	 * 
-	 * return Cliente; }
-	 */
 }

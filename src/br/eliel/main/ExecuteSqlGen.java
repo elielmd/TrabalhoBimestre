@@ -14,11 +14,11 @@ public class ExecuteSqlGen extends SqlGen {
 	private Connection con;
 
 	public ExecuteSqlGen() throws SQLException {
-
+		//conectando com H2.
 		abrirConexao();
 
 	}
-
+	
 	public Connection abrirConexao() throws SQLException {
 		String url = "jdbc:h2:C:/banco/trabalhosql";
 		String user = "sa";
@@ -52,7 +52,6 @@ public class ExecuteSqlGen extends SqlGen {
 			Field[] atributos = cl.getDeclaredFields();
 
 			// Declaração das colunas
-
 			for (int i = 0; i < atributos.length; i++) {
 
 				Field field = atributos[i];
@@ -102,6 +101,7 @@ public class ExecuteSqlGen extends SqlGen {
 				Field fields = atributos[x];
 				if (fields.isAnnotationPresent(Coluna.class)) {
 					Coluna anotacaoColuna = fields.getAnnotation(Coluna.class);
+					//verifica se é chave primária
 					if (anotacaoColuna.pk()) {
 						if (achou > 0) {
 							sb.append(", ");
@@ -119,7 +119,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("\n);");
-			//System.out.println(sb.toString());
+			// System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
@@ -143,7 +143,7 @@ public class ExecuteSqlGen extends SqlGen {
 
 			sb.append("DROP TABLE ").append(nomeTabela).append(";");
 
-			//System.out.println(sb);
+			// System.out.println(sb);
 
 			return sb.toString();
 		} catch (SecurityException e) {
@@ -169,7 +169,7 @@ public class ExecuteSqlGen extends SqlGen {
 		sb.append("INSERT INTO ").append(nomeTabela).append(" (");
 
 		Field[] atributos = cl.getDeclaredFields();
-
+		// pegando nome dos campos
 		for (int i = 0; i < atributos.length; i++) {
 
 			Field field = atributos[i];
@@ -206,7 +206,7 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		sb.append(");");
 		String add = sb.toString();
-		//System.out.println(add)
+		// System.out.println(add)
 
 		try {
 			ps = con.prepareStatement(add);
@@ -231,7 +231,7 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		sb.append("SELECT * FROM ").append(nomeTabela).append(";");
 		String selectFrom = sb.toString();
-		//System.out.println(selectFrom);
+		// System.out.println(selectFrom);
 		PreparedStatement ps = null;
 
 		try {
@@ -254,6 +254,7 @@ public class ExecuteSqlGen extends SqlGen {
 			} else {
 				nomeTabela = obj.getClass().getSimpleName().toUpperCase();
 			}
+			//pega o atributo id
 			Field[] atributos = obj.getClass().getDeclaredFields();
 			String pk = "";
 			for (int i = 0; i < atributos.length; i++) {
@@ -319,6 +320,8 @@ public class ExecuteSqlGen extends SqlGen {
 			} else {
 				nomeColuna = field.getName().toUpperCase();
 			}
+			
+			//se for chave primária não escreve no update
 			if (nomeColuna != pk) {
 				sb.append("  ").append(nomeColuna).append(" = ?");
 
@@ -382,9 +385,9 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		return ps;
 	}
-	
+
 	public Connection getCon() {
-		if (con == null){
+		if (con == null) {
 			try {
 				abrirConexao();
 			} catch (SQLException e) {
