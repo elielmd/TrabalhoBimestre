@@ -21,8 +21,14 @@ public class Main extends ImpDao{
 		
 		listarTodos();
 		
-		buscar(cliente1);
-
+		//buscar();
+		
+		cliente2.setNome("NEW NOME 1");
+		cliente2.setTelefone("NEW TELEFONE 1");
+		cliente2.setEndereco("NEW ENDERECO 1");
+		cliente2.setEstadoCivil(EstadoCivil.VIUVO);
+		atualizar(cliente2);
+		
 		/*Cliente usu1 = new Cliente();
 		usu1.setId(1)
 		usu1.setNome("Luke Skywalker");

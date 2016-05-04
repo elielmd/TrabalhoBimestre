@@ -78,7 +78,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	}
 
-	public Object buscar(Cliente k) throws SQLException {
+	@Override
+	public Cliente buscar(Integer k) throws SQLException {
 		PreparedStatement exbusca = imp.getSqlSelectById(imp.getCon(), k);
 
 		ResultSet exresult;
@@ -101,8 +102,33 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	@Override
 	public void atualizar(Cliente t) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement exalt = imp.getSqlUpdateById(imp.getCon(), t);
 
+		Cliente c = (Cliente) t;
+
+		int exibir = 0;
+
+		try {
+			exalt.setInt(5, c.getId());
+			exalt.setString(1, c.getNome());
+			exalt.setString(3, c.getTelefone());
+			exalt.setString(2, c.getEndereco());
+			exalt.setInt(4, c.getEstadoCivil().ordinal());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			exibir = exalt.executeUpdate();
+			System.out.println("ID..........: " + c.getId());
+			System.out.println("Endereço....: " + c.getEndereco());
+			System.out.println("Telefone....: " + c.getTelefone());
+			System.out.println("Estado.Civil: " + c.getEstadoCivil());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -145,12 +171,6 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 
 		return c;
-	}
-
-	@Override
-	public Cliente buscar(Integer k) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/*
