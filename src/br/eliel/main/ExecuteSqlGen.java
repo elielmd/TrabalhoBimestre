@@ -20,17 +20,10 @@ public class ExecuteSqlGen extends SqlGen {
 	}
 
 	public Connection abrirConexao() throws SQLException {
-		String url = "jdbc:h2:D:/banco/trabalhosql";
+		String url = "jdbc:h2:C:/banco/trabalhosql";
 		String user = "sa";
 		String pass = "sa";
 		con = DriverManager.getConnection(url, user, pass);
-		if (con == null) {
-			try {
-				abrirConexao();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 		return con;
 	}
 
@@ -126,7 +119,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("\n);");
-			System.out.println(sb.toString());
+			//System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
@@ -389,6 +382,21 @@ public class ExecuteSqlGen extends SqlGen {
 			throw new RuntimeException(e);
 		}
 		return ps;
+	}
+	
+	public Connection getCon() {
+		if (con == null){
+			try {
+				abrirConexao();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return con;
+	}
+
+	public void setCon(Connection con) {
+		this.con = con;
 	}
 
 }

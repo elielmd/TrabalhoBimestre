@@ -12,33 +12,69 @@ import br.eliel.enums.EstadoCivil;
 
 public class ImpDao implements Dao<Cliente, Integer> {
 
-	private Connection con = null;
+	private ExecuteSqlGen imp;
 
-	public Connection getCon() {
-		return con;
+	private ExecuteSqlGen getImp() {
+		if (imp == null) {
+			try {
+				setImp(new ExecuteSqlGen());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return imp;
 	}
 
-	public void setCon(Connection con) {
-		this.con = con;
+	private void setImp(ExecuteSqlGen imp) {
+		this.imp = imp;
 	}
 
 	public void apagarTabela(Cliente t) throws SQLException {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
+		String exsql = getImp().getDropTable(getImp().getCon(), t);
 
-		try {
-			String csql = ex.getDropTable(con, t);
-			PreparedStatement ps = con.prepareStatement(csql);
+		try (PreparedStatement ps = getImp().getCon().prepareStatement(exsql)) {
 			ps.executeUpdate();
-			ps.close();
-
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Tabela nao encontrada!");
+			// e.printStackTrace();
 
 		}
 
 	}
 
-	public void criarTabela(Cliente t) throws SQLException {
+	@Override
+	public void salvar(Cliente t) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Cliente buscar(Integer k) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void atualizar(Cliente t) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void excluir(Integer k) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Cliente> listarTodos() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*public void criarTabela(Cliente t) throws SQLException {
 		ExecuteSqlGen ex = new ExecuteSqlGen();
 
 		try {
@@ -65,6 +101,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			pst.setString(3, t.getEndereco());
 			pst.setString(4, t.getTelefone());
 			pst.setInt(5, t.getEstadoCivil().ordinal());
+
 			pst.executeUpdate();
 			pst.close();
 		} catch (SQLException e) {
@@ -163,5 +200,5 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 
 		return Cliente;
-	}
+	}*/
 }
