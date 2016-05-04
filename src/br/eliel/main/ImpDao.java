@@ -114,7 +114,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			exalt.setString(3, c.getTelefone());
 			exalt.setString(2, c.getEndereco());
 			exalt.setInt(4, c.getEstadoCivil().ordinal());
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -122,10 +122,10 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		try {
 			exibir = exalt.executeUpdate();
 			System.out.println("ID..........: " + c.getId());
-			System.out.println("Endereço....: " + c.getEndereco());
 			System.out.println("Telefone....: " + c.getTelefone());
+			System.out.println("Endereço....: " + c.getEndereco());
 			System.out.println("Estado.Civil: " + c.getEstadoCivil());
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -133,7 +133,29 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	@Override
 	public void excluir(Integer k) throws SQLException {
-		// TODO Auto-generated method stub
+		PreparedStatement psexcluir = imp.getSqlDeleteById(imp.getCon(), k);
+
+		Cliente c = (Cliente) k;
+
+		int buscar = 0;
+
+		try {
+			psexcluir.setInt(1, c.getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			buscar = psexcluir.executeUpdate();
+			System.out.println("ID...........: " + c.getId());
+			System.out.println("Nome........: " + c.getNome());
+			System.out.println("Telefone....: " + c.getTelefone());
+			System.out.println("Endereço....: " + c.getEndereco());
+			System.out.println("Estado.Civil: " + c.getEstadoCivil());
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -161,8 +183,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			throw new RuntimeException(e);
 		}
 
-
-		for (Cliente cliente: c){
+		for (Cliente cliente : c) {
 			System.out.println("Codigo ID...: " + cliente.getId());
 			System.out.println("Nome Cliente: " + cliente.getNome());
 			System.out.println("Num.Telefone: " + cliente.getTelefone());

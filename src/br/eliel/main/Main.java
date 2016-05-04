@@ -29,6 +29,11 @@ public class Main extends ImpDao{
 		cliente2.setEstadoCivil(EstadoCivil.VIUVO);
 		atualizar(cliente2);
 		
+		excluir();
+		
+		
+		listarTodos();
+		
 		/*Cliente usu1 = new Cliente();
 		usu1.setId(1)
 		usu1.setNome("Luke Skywalker");
