@@ -119,7 +119,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("\n);");
-			//System.out.println(sb.toString());
+			System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
