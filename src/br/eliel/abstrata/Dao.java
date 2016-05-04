@@ -5,16 +5,16 @@ import java.util.List;
 
 import br.eliel.main.Cliente;
 
-public interface Dao<T, K> {
+public interface Dao<Cliente, id> {
 
-	public void salvar(T t) throws SQLException;
+	public void salvar(Cliente t) throws SQLException;
 
-	public T buscar(K k) throws SQLException;
+	public Cliente buscar(Cliente k) throws SQLException;
 
-	public void atualizar(T t) throws SQLException;
+	public void atualizar(Cliente t) throws SQLException;
 
-	public void excluir(K k) throws SQLException;
+	public void excluir(Cliente k) throws SQLException;
 
-	public List<T> listarTodos() throws SQLException;
+	public List<Cliente> listarTodos() throws SQLException;
 
 }

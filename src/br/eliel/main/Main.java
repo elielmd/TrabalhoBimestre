@@ -21,7 +21,7 @@ public class Main extends ImpDao{
 		
 		listarTodos();
 		
-		//buscar();
+		buscar(cliente2);
 		
 		cliente2.setNome("NEW NOME 1");
 		cliente2.setTelefone("NEW TELEFONE 1");
@@ -29,7 +29,7 @@ public class Main extends ImpDao{
 		cliente2.setEstadoCivil(EstadoCivil.VIUVO);
 		atualizar(cliente2);
 		
-		excluir();
+		//excluir();
 		
 		
 		listarTodos();

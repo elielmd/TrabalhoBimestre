@@ -119,7 +119,7 @@ public class ExecuteSqlGen extends SqlGen {
 				}
 			}
 			sb.append("\n);");
-			System.out.println(sb.toString());
+			//System.out.println(sb.toString());
 			return sb.toString();
 
 		} catch (SecurityException e) {
@@ -143,7 +143,7 @@ public class ExecuteSqlGen extends SqlGen {
 
 			sb.append("DROP TABLE ").append(nomeTabela).append(";");
 
-			System.out.println(sb);
+			//System.out.println(sb);
 
 			return sb.toString();
 		} catch (SecurityException e) {
@@ -204,9 +204,9 @@ public class ExecuteSqlGen extends SqlGen {
 			}
 			sb.append('?');
 		}
-		sb.append(')');
+		sb.append(");");
 		String add = sb.toString();
-		System.out.println(add);
+		//System.out.println(add)
 
 		try {
 			ps = con.prepareStatement(add);
@@ -231,7 +231,7 @@ public class ExecuteSqlGen extends SqlGen {
 		}
 		sb.append("SELECT * FROM ").append(nomeTabela).append(";");
 		String selectFrom = sb.toString();
-		System.out.println(selectFrom);
+		//System.out.println(selectFrom);
 		PreparedStatement ps = null;
 
 		try {
@@ -272,7 +272,7 @@ public class ExecuteSqlGen extends SqlGen {
 					}
 				}
 			}
-			sb.append("SELECT * FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?");
+			sb.append("SELECT * FROM ").append(nomeTabela).append(" WHERE ").append(pk).append(" = ?;");
 			System.out.println(sb.toString());
 			try {
 				ps = con.prepareStatement(sb.toString());

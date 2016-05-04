@@ -31,6 +31,9 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	public void apagarTabela(Cliente t) throws SQLException {
 		String exsql = getImp().getDropTable(getImp().getCon(), t);
+		System.out.println("COMANDO DROP");
+		System.out.println("________________________________________________________");
+		System.out.println(exsql);
 		try (PreparedStatement ps = getImp().getCon().prepareStatement(exsql)) {
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -41,6 +44,9 @@ public class ImpDao implements Dao<Cliente, Integer> {
 
 	public void criarTabela(Cliente t) throws SQLException {
 		String exsql = getImp().getCreateTable(getImp().getCon(), t);
+		System.out.println("\nCOMANDO CREATE");
+		System.out.println("________________________________________________________");
+		System.out.println(exsql);
 		try (PreparedStatement ps = getImp().getCon().prepareStatement(exsql)) {
 			ps.executeUpdate();
 		} catch (SQLException e) {
@@ -53,7 +59,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		PreparedStatement add = getImp().getSqlInsert(getImp().getCon(), t);
 
 		Cliente c = (Cliente) t;
-
+		System.out.println("\nCOMANDO INSERT");
+		System.out.println("________________________________________________________");
 		try {
 			add.setInt(1, c.getId());
 			add.setString(2, c.getNome());
@@ -63,7 +70,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println(add);
 		System.out.println("Codigo ID...: " + c.getId());
 		System.out.println("Nome Cliente: " + c.getNome());
 		System.out.println("Num.Telefone: " + c.getTelefone());
@@ -79,14 +86,18 @@ public class ImpDao implements Dao<Cliente, Integer> {
 	}
 
 	@Override
-	public Cliente buscar(Integer k) throws SQLException {
-		PreparedStatement exbusca = imp.getSqlSelectById(imp.getCon(), k);
-
+	public Cliente buscar(Cliente id) throws SQLException {
+		PreparedStatement exbusca = imp.getSqlSelectById(imp.getCon(), id);
+		
 		ResultSet exresult;
-
+		Cliente cli = (Cliente) id;
+		exbusca.setInt(1,cli.getId());
+		System.out.println("\nCOMANDO SELECT BY ID");
+		System.out.println("________________________________________________________");
 		try {
 			exresult = exbusca.executeQuery();
 			while (exresult.next()) {
+				System.out.println(exbusca);
 				System.out.println("Codigo ID...: " + exresult.getInt("UsID"));
 				System.out.println("Nome Cliente: " + exresult.getString("UsNome"));
 				System.out.println("Num.Telefone: " + exresult.getString("UsTelefone"));
@@ -96,6 +107,8 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+				
 
 		return null;
 	}
@@ -131,7 +144,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 	}
 
-	@Override
+	/*@Override
 	public void excluir(Integer k) throws SQLException {
 		PreparedStatement psexcluir = imp.getSqlDeleteById(imp.getCon(), k);
 
@@ -157,7 +170,7 @@ public class ImpDao implements Dao<Cliente, Integer> {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 
 	@Override
 	public List<Cliente> listarTodos() throws SQLException {
@@ -192,6 +205,12 @@ public class ImpDao implements Dao<Cliente, Integer> {
 		}
 
 		return c;
+	}
+
+	@Override
+	public void excluir(Cliente id) throws SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/*
