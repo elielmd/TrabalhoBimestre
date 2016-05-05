@@ -8,7 +8,7 @@ public class Main extends ImpDao {
 
 	public Main() throws SQLException {
 		//inserindo cliente
-		Cliente cliente1 = new Cliente(1, "Luke Skywalker", "Polis Massa", "7777-7777", EstadoCivil.SOLTEIRO);
+		Cliente cliente1 = new Cliente(1, "Luke Skywalker", "7777-7777", "Polis Massa", EstadoCivil.SOLTEIRO);
 		//chamar métodos
 		apagarTabela(cliente1);
 		criarTabela(cliente1);

@@ -12,12 +12,12 @@ public class Cliente {
 
 	@Coluna(nome = "UsNome", tamanho = 100)
 	private String nome;
+	
+	@Coluna(nome = "UsTelefone", tamanho = 20)
+	private String telefone;
 
 	@Coluna(nome = "UsEndereco", tamanho = 255)
 	private String endereco;
-
-	@Coluna(nome = "UsTelefone", tamanho = 20)
-	private String telefone;
 
 	@Coluna(nome = "UsEstadoCivil", tamanho = 100)
 	private EstadoCivil estadoCivil;
